@@ -9,12 +9,8 @@ import "./tasks"
 
 dotenv.config()
 
-const MAINNET_RPC_URL =
-    process.env.MAINNET_RPC_URL ||
-    "https://babel-api.mainnet.iotex.io"
-const TESTNET_RPC_URL =
-    process.env.TESTNET_RPC_URL ||
-    "https://babel-api.testnet.iotex.io"
+const MAINNET_RPC_URL = process.env.MAINNET_RPC_URL || "https://babel-api.mainnet.iotex.io"
+const TESTNET_RPC_URL = process.env.TESTNET_RPC_URL || "https://babel-api.testnet.iotex.io"
 
 const PRIVATE_KEY = process.env.PRIVATE_KEY
 // optional
