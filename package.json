@@ -41,7 +41,7 @@
     },
     "dependencies": {
         "dotenv": "^10.0.0",
-        "solmate": "^6.6.1"
+        "@openzeppelin/contracts": "^4.2.0"
     },
     "mocha": {
         "timeout": 10000000
