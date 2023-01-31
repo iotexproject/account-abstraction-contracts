@@ -6,6 +6,8 @@ import "@nomicfoundation/hardhat-chai-matchers"
 import "hardhat-deploy"
 import "hardhat-contract-sizer"
 import "./tasks"
+import { deterministicInfo } from "./helper-hardhat-config"
+import { BigNumber } from "ethers"
 
 dotenv.config()
 
@@ -21,6 +23,23 @@ const accounts = PRIVATE_KEY !== undefined ? [PRIVATE_KEY] : []
 // const accounts = {
 //     mnemonic: MNEMONIC,
 // }
+
+const deterministicDeployment = (network: string) => {
+    const info = deterministicInfo[parseInt(network)]
+    if (!info) {
+      throw new Error(`
+        Safe factory not found for network ${network}. You can request a new deployment at https://github.com/safe-global/safe-singleton-factory.
+        For more information, see https://github.com/safe-global/safe-contracts#replay-protection-eip-155
+      `)
+    }
+
+    return {
+        factory: info.address,
+        deployer: info.signerAddress,
+        funding: BigNumber.from(info.gasLimit).mul(BigNumber.from(info.gasPrice)).toString(),
+        signedTx: info.transaction
+    }
+}
 
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
@@ -61,6 +80,7 @@ const config: HardhatUserConfig = {
         runOnCompile: false,
         only: ["DIDRegistry"],
     },
+    deterministicDeployment,
     namedAccounts: {
         deployer: {
             default: 0,
