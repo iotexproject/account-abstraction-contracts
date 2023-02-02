@@ -1,15 +1,16 @@
 import { ethers } from "hardhat"
-
 import { SimpleAccountFactory } from "../typechain/contracts/samples/SimpleAccountFactory"
 
 async function main() {
     const factory = (await ethers.getContract("SimpleAccountFactory")) as SimpleAccountFactory
 
     const owner = new ethers.Wallet(process.env.OWNER!)
+    const bundler = new ethers.Wallet(process.env.BUNDLER!, ethers.provider)
 
-    const address = await factory.getAddress(owner.address, 0)
+    await factory.connect(bundler).createAccount(owner.address, 0)
+    const account = await factory.getAddress(owner.address, 0)
 
-    console.log(`${owner.address} owned account address: ${address}`)
+    console.log(`created account ${account}`)
 }
 
 main()
