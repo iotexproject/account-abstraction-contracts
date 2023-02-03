@@ -7,7 +7,7 @@ async function main() {
 
     const owner = new ethers.Wallet(process.env.OWNER!)
 
-    const address = await factory.getAddress(owner.address, 0)
+    const address = await factory.getAddress(owner.address, 2)
 
     console.log(`${owner.address} owned account address: ${address}`)
 }
