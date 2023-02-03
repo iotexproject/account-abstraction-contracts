@@ -2,6 +2,7 @@ import { ethers } from "hardhat"
 import { SimpleAccountFactory } from "../../typechain/contracts/samples/SimpleAccountFactory"
 import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
 import { fillUserOp, signOp } from "../utils"
+import { hexConcat } from "ethers/lib/utils"
 
 async function main() {
     const factory = (await ethers.getContract("SimpleAccountFactory")) as SimpleAccountFactory
@@ -12,9 +13,10 @@ async function main() {
     const bundler = new ethers.Wallet(process.env.BUNDLER!, ethers.provider)
 
     const account = await factory.getAddress(owner.address, 2)
-    const initCode =
-        factory.address +
-        factory.interface.encodeFunctionData("createAccount", [owner.address, 2]).substring(2)
+    const initCode = hexConcat([
+        factory.address,
+        factory.interface.encodeFunctionData("createAccount", [owner.address, 2]),
+    ])
     const callData = accountTemp.interface.encodeFunctionData("execute", [
         "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
         "100",
@@ -43,7 +45,7 @@ async function main() {
         console.log(`fund to account ${account}`)
         const valueTx = await bundler.sendTransaction({
             to: account,
-            value: ethers.utils.parseEther("1")
+            value: ethers.utils.parseEther("1"),
         })
         await valueTx.wait()
     }

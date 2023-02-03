@@ -39,7 +39,7 @@ async function main() {
         console.log(`fund to account ${account}`)
         const valueTx = await bundler.sendTransaction({
             to: account,
-            value: ethers.utils.parseEther("1")
+            value: ethers.utils.parseEther("1"),
         })
         await valueTx.wait()
     }
