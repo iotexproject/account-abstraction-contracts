@@ -27,7 +27,7 @@ export const DefaultsForUserOp: UserOperation = {
     verificationGasLimit: 100000, // default verification gas. will add create2 cost (3200+200*length) if initCode exists
     preVerificationGas: 21000, // should also cover calldata cost.
     maxFeePerGas: 0, // TODO: how to setting for NON-EIP1559 chain
-    maxPriorityFeePerGas: 1e12, // iotex gas price
+    maxPriorityFeePerGas: 2e12, // iotex gas price
     paymasterAndData: "0x",
     signature: "0x",
 }
