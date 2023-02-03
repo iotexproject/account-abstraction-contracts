@@ -1,5 +1,5 @@
 import { ethers } from "hardhat"
-import { SimpleAccountFactory } from "../typechain/contracts/samples/SimpleAccountFactory"
+import { SimpleAccountFactory } from "../../typechain/contracts/samples/SimpleAccountFactory"
 
 async function main() {
     const factory = (await ethers.getContract("SimpleAccountFactory")) as SimpleAccountFactory

@@ -1,7 +1,7 @@
 import { ethers } from "hardhat"
-import { SimpleAccountFactory } from "../typechain/contracts/samples/SimpleAccountFactory"
-import { EntryPoint } from "../typechain/contracts/core/EntryPoint"
-import { fillUserOp, signOp } from "./utils"
+import { SimpleAccountFactory } from "../../typechain/contracts/samples/SimpleAccountFactory"
+import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
+import { fillUserOp, signOp } from "../utils"
 
 async function main() {
     const factory = (await ethers.getContract("SimpleAccountFactory")) as SimpleAccountFactory
