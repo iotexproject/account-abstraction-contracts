@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import "./P256Account.sol";
 import "./ISecp256r1.sol";
 
-contract SimpleAccountFactory {
+contract P256AccountFactory {
     P256Account public immutable accountImplementation;
 
     constructor(IEntryPoint _entryPoint, ISecp256r1 _validator) {
