@@ -28,7 +28,7 @@ async function main() {
 
     const tx = await entryPoint.connect(bundler).handleOps([signedOp], bundler.address)
 
-    console.log(`create and transfer tx: ${tx.hash}`)
+    console.log(`create use entrypoint tx: ${tx.hash}`)
 }
 
 main()
