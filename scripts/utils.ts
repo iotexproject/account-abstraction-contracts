@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, Contract, Signer, Wallet } from "ethers"
 import { BytesLike } from "@ethersproject/bytes"
-import { arrayify, defaultAbiCoder, hexDataSlice, keccak256 } from "ethers/lib/utils"
+import { arrayify, Bytes, defaultAbiCoder, hexDataSlice, keccak256 } from "ethers/lib/utils"
 import { EntryPoint } from "../typechain/contracts/core/EntryPoint"
 import { ethers } from "hardhat"
 
@@ -95,17 +95,32 @@ function encode(typevalues: Array<{ type: string; val: any }>, forSignature: boo
     return defaultAbiCoder.encode(types, values)
 }
 
+export interface AccountSigner {
+    sign(opHash: string): Promise<string>
+}
+
+export class ECDSASigner implements AccountSigner {
+    private signer: Wallet | Signer
+
+    constructor(signer: Wallet | Signer) {
+        this.signer = signer
+    }
+
+    async sign(opHash: string): Promise<string> {
+        const message = arrayify(opHash)
+        return this.signer.signMessage(message)
+    }
+}
+
 export async function signOp(
     op: UserOperation,
     entryPoint: string,
     chainId: number,
-    signer: Wallet | Signer
+    signer: AccountSigner
 ): Promise<UserOperation> {
-    const message = arrayify(getUserOpHash(op, entryPoint, chainId))
-
     return {
         ...op,
-        signature: await signer.signMessage(message),
+        signature: await signer.sign(getUserOpHash(op, entryPoint, chainId)),
     }
 }
 

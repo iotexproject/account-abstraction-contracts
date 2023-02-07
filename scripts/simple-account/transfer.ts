@@ -1,7 +1,7 @@
 import { ethers } from "hardhat"
 import { SimpleAccountFactory } from "../../typechain/contracts/samples/SimpleAccountFactory"
 import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
-import { fillUserOp, signOp } from "../utils"
+import { ECDSASigner, fillUserOp, signOp } from "../utils"
 
 async function main() {
     const factory = (await ethers.getContract("SimpleAccountFactory")) as SimpleAccountFactory
@@ -24,7 +24,7 @@ async function main() {
 
     const chainId = (await ethers.provider.getNetwork()).chainId
     const fullCreateOp = await fillUserOp(createOp, entryPoint)
-    const signedOp = await signOp(fullCreateOp, entryPoint.address, chainId, owner)
+    const signedOp = await signOp(fullCreateOp, entryPoint.address, chainId, new ECDSASigner(owner))
 
     const stake = await entryPoint.balanceOf(account)
     if (stake.isZero()) {
