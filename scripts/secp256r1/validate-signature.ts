@@ -12,12 +12,10 @@ async function main() {
     const keyContent = fs.readFileSync(path.join(__dirname, "key.pem"))
     const keyPair = ecPem.loadPrivateKey(keyContent)
 
-    const message = Math.random()
-        .toString(36)
-        .replace(/[^a-z]+/g, "")
-        .substring(0, 5)
-
-    const { messageHash, signature } = sign(keyPair, message)
+    const { messageHash, signature } = sign(
+        keyPair,
+        Buffer.from("fa912867570fc323471f1dc22e6c6cc6a8ce88ab9ef3229a800f5b3e46520750", "hex")
+    )
 
     const publicKey = "0x" + keyPair.getPublicKey("hex").substring(2)
     const result = await validator["validateSignature(bytes32,bytes,bytes)"](

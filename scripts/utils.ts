@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, Contract, Signer, Wallet } from "ethers"
 import { BytesLike } from "@ethersproject/bytes"
-import { arrayify, Bytes, defaultAbiCoder, hexDataSlice, keccak256 } from "ethers/lib/utils"
+import { arrayify, defaultAbiCoder, hexDataSlice, keccak256 } from "ethers/lib/utils"
 import { EntryPoint } from "../typechain/contracts/core/EntryPoint"
 import { ethers } from "hardhat"
 
@@ -27,7 +27,7 @@ export const DefaultsForUserOp: UserOperation = {
     verificationGasLimit: 100000, // default verification gas. will add create2 cost (3200+200*length) if initCode exists
     preVerificationGas: 21000, // should also cover calldata cost.
     maxFeePerGas: 0, // TODO: how to setting for NON-EIP1559 chain
-    maxPriorityFeePerGas: 2e12, // iotex gas price
+    maxPriorityFeePerGas: 1e12, // iotex gas price
     paymasterAndData: "0x",
     signature: "0x",
 }
@@ -118,6 +118,8 @@ export async function signOp(
     chainId: number,
     signer: AccountSigner
 ): Promise<UserOperation> {
+    console.log(`pending sign UserOperation: ${JSON.stringify(op)}`)
+
     return {
         ...op,
         signature: await signer.sign(getUserOpHash(op, entryPoint, chainId)),

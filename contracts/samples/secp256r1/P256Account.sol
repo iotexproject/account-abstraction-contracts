@@ -3,6 +3,7 @@ pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
+import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 import "../../core/BaseAccount.sol";
 import "./ISecp256r1.sol";
@@ -13,12 +14,11 @@ import "./ISecp256r1.sol";
  *  has execute, eth handling methods
  *  has a single signer that can send requests through the entryPoint.
  */
-contract P256Account is BaseAccount, Initializable {
+contract P256Account is BaseAccount, UUPSUpgradeable, Initializable {
     using ECDSA for bytes32;
 
     uint256 private _nonce;
-    uint256[2] private publicKey;
-    ISecp256r1 private _validator;
+    bytes public publicKey;
 
     function nonce() public view virtual override returns (uint256) {
         return _nonce;
@@ -29,8 +29,9 @@ contract P256Account is BaseAccount, Initializable {
     }
 
     IEntryPoint private immutable _entryPoint;
+    ISecp256r1 private immutable _validator;
 
-    event P256AccountInitialized(IEntryPoint indexed entryPoint, uint256[2] publicKey);
+    event P256AccountInitialized(IEntryPoint indexed entryPoint, ISecp256r1 indexed validator, bytes publicKey);
 
     // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
@@ -75,9 +76,9 @@ contract P256Account is BaseAccount, Initializable {
     }
 
     function _initialize(bytes calldata _publicKey) internal virtual {
-        (publicKey[0], publicKey[1]) = abi.decode(_publicKey, (uint256, uint256));
+        publicKey = _publicKey;
 
-        emit P256AccountInitialized(_entryPoint, publicKey);
+        emit P256AccountInitialized(_entryPoint, _validator, publicKey);
     }
 
     /// implement template method of BaseAccount
@@ -91,12 +92,7 @@ contract P256Account is BaseAccount, Initializable {
         bytes32 userOpHash,
         address
     ) internal virtual override returns (uint256 sigTimeRange) {
-        bytes32 hash = userOpHash.toEthSignedMessageHash();
-
-        uint256[2] memory rs;
-        (rs[0], rs[1]) = abi.decode(userOp.signature, (uint256, uint256));
-
-        if (!_validator.validateSignature(sha256(abi.encode(hash)), rs, publicKey))
+        if (!_validator.validateSignature(sha256(abi.encode(userOpHash)), userOp.signature, publicKey))
             return SIG_VALIDATION_FAILED;
         return 0;
     }
@@ -142,14 +138,17 @@ contract P256Account is BaseAccount, Initializable {
     ) public {
         bytes32 hash = keccak256(abi.encode(withdrawAddress, amount, _nonce));
 
-        uint256[2] memory rs;
-        (rs[0], rs[1]) = abi.decode(signature, (uint256, uint256));
-
         require(
-            _validator.validateSignature(sha256(abi.encode(hash)), rs, publicKey),
+            _validator.validateSignature(sha256(abi.encode(hash)), signature, publicKey),
             "signature invalid"
         );
 
         entryPoint().withdrawTo(withdrawAddress, amount);
+    }
+
+    function _authorizeUpgrade(
+        address /*newImplementation*/
+    ) internal virtual override {
+        _onlyEntryPoint();
     }
 }
