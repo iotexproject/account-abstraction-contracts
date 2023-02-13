@@ -111,12 +111,4 @@ describe("P256Account", () => {
             )
         ).to.equal(true)
     })
-
-    it("withdraw with secp256r1 signature", async () => {
-        const sender = await accountFactory.getAddress(publicKey, 0)
-        await accountFactory.createAccount(publicKey, 0)
-        const account =  P256Account__factory.connect(sender, ethers.provider.getSigner())
-
-        // TODO
-    })
 })

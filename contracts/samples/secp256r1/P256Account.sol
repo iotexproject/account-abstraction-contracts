@@ -31,7 +31,11 @@ contract P256Account is BaseAccount, UUPSUpgradeable, Initializable {
     IEntryPoint private immutable _entryPoint;
     ISecp256r1 private immutable _validator;
 
-    event P256AccountInitialized(IEntryPoint indexed entryPoint, ISecp256r1 indexed validator, bytes publicKey);
+    event P256AccountInitialized(
+        IEntryPoint indexed entryPoint,
+        ISecp256r1 indexed validator,
+        bytes publicKey
+    );
 
     // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
@@ -92,8 +96,15 @@ contract P256Account is BaseAccount, UUPSUpgradeable, Initializable {
         bytes32 userOpHash,
         address
     ) internal virtual override returns (uint256 sigTimeRange) {
-        if (!_validator.validateSignature(sha256(abi.encode(userOpHash)), userOp.signature, publicKey))
+        if (
+            !_validator.validateSignature(
+                sha256(abi.encode(userOpHash)),
+                userOp.signature,
+                publicKey
+            )
+        ) {
             return SIG_VALIDATION_FAILED;
+        }
         return 0;
     }
 
