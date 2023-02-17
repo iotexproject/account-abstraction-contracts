@@ -31,13 +31,12 @@ async function main() {
     const createOp = {
         sender: account,
         initCode: initCode,
-        verificationGasLimit: 1400000,
+        verificationGasLimit: 500000,
     }
 
     const fullCreateOp = await fillUserOp(createOp, entryPoint)
 
     const stake = await entryPoint.balanceOf(account)
-    console.log(stake.toString())
     if (stake.isZero()) {
         console.log(`deposit gas for account ${account}`)
         await entryPoint
@@ -53,10 +52,8 @@ async function main() {
         new P2565Signer(keyPair)
     )
 
-    console.log(signedOp.verificationGasLimit.toString())
-
     const tx = await entryPoint.connect(bundler).handleOps([signedOp], bundler.address)
-    console.log(`create use paymaster tx: ${tx.hash}`)
+    console.log(`create account tx: ${tx.hash}`)
 }
 
 main()
