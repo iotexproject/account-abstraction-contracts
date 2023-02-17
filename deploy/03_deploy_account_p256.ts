@@ -7,7 +7,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployer } = await getNamedAccounts()
     const { deploy } = deployments
 
-    const validator = await deploy("EllipticCurve", {
+    const validator = await deploy("Secp256r1", {
         from: deployer,
         args: [],
         log: true,

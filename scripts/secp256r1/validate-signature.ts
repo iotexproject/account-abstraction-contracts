@@ -3,11 +3,11 @@ import * as fs from "fs"
 import * as path from "path"
 import ecPem from "ec-pem"
 
-import { EllipticCurve } from "../../typechain/contracts/samples/secp256r1/EllipticCurve"
+import { Secp256r1 } from "../../typechain/contracts/samples/secp256r1/Secp256r1"
 import { sign } from "./signer"
 
 async function main() {
-    const validator = (await ethers.getContract("EllipticCurve")) as EllipticCurve
+    const validator = (await ethers.getContract("Secp256r1")) as Secp256r1
 
     const keyContent = fs.readFileSync(path.join(__dirname, "key.pem"))
     const keyPair = ecPem.loadPrivateKey(keyContent)
