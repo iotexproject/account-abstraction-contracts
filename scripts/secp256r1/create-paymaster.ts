@@ -2,7 +2,7 @@ import { ethers } from "hardhat"
 import * as fs from "fs"
 import * as path from "path"
 import ecPem from "ec-pem"
-import { arrayify, hexConcat } from "ethers/lib/utils"
+import { arrayify, hexConcat, keccak256 } from "ethers/lib/utils"
 
 import { P256AccountFactory } from "../../typechain/contracts/samples/secp256r1/P256AccountFactory"
 import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
@@ -31,8 +31,7 @@ async function main() {
     const createOp = {
         sender: account,
         initCode: initCode,
-        verificationGasLimit: 1400000,
-        // preVerificationGas: 100000
+        verificationGasLimit: 600000,
     }
 
     const fullCreateOp = await fillUserOp(createOp, entryPoint)
@@ -40,15 +39,6 @@ async function main() {
     const pendingOpHash = userOpHash(fullCreateOp)
     const paymasterSignature = await signer.signMessage(arrayify(pendingOpHash))
     fullCreateOp.paymasterAndData = hexConcat([paymaster.address, paymasterSignature])
-
-    const stake = await entryPoint.balanceOf(account)
-    console.log(stake.toString())
-    if (stake.isZero()) {
-        console.log(`deposit gas for account ${account}`)
-        await entryPoint
-            .connect(bundler)
-            .depositTo(account, { value: ethers.utils.parseEther("10") })
-    }
 
     const chainId = (await ethers.provider.getNetwork()).chainId
     const signedOp = await signOp(
@@ -58,10 +48,15 @@ async function main() {
         new P2565Signer(keyPair)
     )
 
-    console.log(signedOp.verificationGasLimit.toString())
+    const err = await entryPoint.callStatic.simulateValidation(signedOp).catch(e => e)
+    if (err.errorName === 'FailedOp') {
+        console.error(`simulate op error ${err.errorArgs.at(-1)}`)
+    } else if (err.errorName !== 'ValidationResult') {
+        console.error(`unknow error ${err}`)
+    }
 
     const tx = await entryPoint.connect(bundler).handleOps([signedOp], bundler.address)
-    console.log(`create use paymaster tx: ${tx.hash}`)
+    console.log(`create use paymaster tx: ${tx.hash}, account: ${account}`)
 }
 
 main()

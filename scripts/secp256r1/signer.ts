@@ -63,5 +63,5 @@ export function userOpHash(op: UserOperation): string {
     const op1 = { ...op }
     op1.initCode = keccak256(op.initCode)
     op1.callData = keccak256(op.callData)
-    return defaultAbiCoder.encode([userOpType as any], [{ ...op1 }])
+    return keccak256(defaultAbiCoder.encode([userOpType as any], [{ ...op1 }]))
 }
