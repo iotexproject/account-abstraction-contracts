@@ -11,6 +11,7 @@ import { P2565Signer, userOpHash } from "./signer"
 
 async function main() {
     const factory = (await ethers.getContract("P256AccountFactory")) as P256AccountFactory
+    const accountTpl = await ethers.getContractFactory("P256Account")
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
     const paymaster = await ethers.getContract("VerifyingPaymaster")
 
@@ -25,16 +26,18 @@ async function main() {
     const index = 0
     const account = await factory.getAddress(publicKey, index)
 
-    const initCode = hexConcat([
-        factory.address,
-        factory.interface.encodeFunctionData("createAccount", [publicKey, index]),
+    const callData = accountTpl.interface.encodeFunctionData("execute", [
+        "0xf39Fd6e51aad88F6F4ce6aB8827279cffFb92266",
+        ethers.utils.parseEther("0.1"),
+        "0x",
     ])
-    const createOp = {
+
+    const transferOp = {
         sender: account,
-        initCode: initCode,
+        callData,
     }
 
-    const fullCreateOp = await fillUserOp(createOp, entryPoint)
+    const fullCreateOp = await fillUserOp(transferOp, entryPoint)
 
     const pendingOpHash = userOpHash(fullCreateOp)
     const paymasterSignature = await signer.signMessage(arrayify(pendingOpHash))
@@ -56,7 +59,7 @@ async function main() {
     }
 
     const tx = await entryPoint.connect(bundler).handleOps([signedOp], bundler.address)
-    console.log(`create use paymaster tx: ${tx.hash}, account: ${account}`)
+    console.log(`transfer use paymaster tx: ${tx.hash}`)
 }
 
 main()
