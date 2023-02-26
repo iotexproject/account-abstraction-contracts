@@ -6,6 +6,7 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 
 import "../../core/BaseAccount.sol";
+import "../callback/TokenCallbackHandler.sol";
 import "./ISecp256r1.sol";
 
 /**
@@ -14,7 +15,7 @@ import "./ISecp256r1.sol";
  *  has execute, eth handling methods
  *  has a single signer that can send requests through the entryPoint.
  */
-contract P256Account is BaseAccount, UUPSUpgradeable, Initializable {
+contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {
     using ECDSA for bytes32;
 
     uint256 private _nonce;
