@@ -14,12 +14,13 @@ abstract contract StakeManager is IStakeManager {
     /// maps paymaster to their deposits and stakes
     mapping(address => DepositInfo) public deposits;
 
+    /// @inheritdoc IStakeManager
     function getDepositInfo(address account) public view returns (DepositInfo memory info) {
         return deposits[account];
     }
 
     // internal method to return just the stake info
-    function getStakeInfo(address addr) internal view returns (StakeInfo memory info) {
+    function _getStakeInfo(address addr) internal view returns (StakeInfo memory info) {
         DepositInfo storage depositInfo = deposits[addr];
         info.stake = depositInfo.stake;
         info.unstakeDelaySec = depositInfo.unstakeDelaySec;
@@ -34,7 +35,7 @@ abstract contract StakeManager is IStakeManager {
         depositTo(msg.sender);
     }
 
-    function internalIncrementDeposit(address account, uint256 amount) internal {
+    function _incrementDeposit(address account, uint256 amount) internal {
         DepositInfo storage info = deposits[account];
         uint256 newAmount = info.deposit + amount;
         require(newAmount <= type(uint112).max, "deposit overflow");
@@ -45,7 +46,7 @@ abstract contract StakeManager is IStakeManager {
      * add to the deposit of the given account
      */
     function depositTo(address account) public payable {
-        internalIncrementDeposit(account, msg.value);
+        _incrementDeposit(account, msg.value);
         DepositInfo storage info = deposits[account];
         emit Deposited(account, info.deposit);
     }
@@ -53,17 +54,17 @@ abstract contract StakeManager is IStakeManager {
     /**
      * add to the account's stake - amount and delay
      * any pending unstake is first cancelled.
-     * @param _unstakeDelaySec the new lock duration before the deposit can be withdrawn.
+     * @param unstakeDelaySec the new lock duration before the deposit can be withdrawn.
      */
-    function addStake(uint32 _unstakeDelaySec) public payable {
+    function addStake(uint32 unstakeDelaySec) public payable {
         DepositInfo storage info = deposits[msg.sender];
-        require(_unstakeDelaySec > 0, "must specify unstake delay");
-        require(_unstakeDelaySec >= info.unstakeDelaySec, "cannot decrease unstake time");
+        require(unstakeDelaySec > 0, "must specify unstake delay");
+        require(unstakeDelaySec >= info.unstakeDelaySec, "cannot decrease unstake time");
         uint256 stake = info.stake + msg.value;
         require(stake > 0, "no stake specified");
-        require(stake < type(uint112).max, "stake overflow");
-        deposits[msg.sender] = DepositInfo(info.deposit, true, uint112(stake), _unstakeDelaySec, 0);
-        emit StakeLocked(msg.sender, stake, _unstakeDelaySec);
+        require(stake <= type(uint112).max, "stake overflow");
+        deposits[msg.sender] = DepositInfo(info.deposit, true, uint112(stake), unstakeDelaySec, 0);
+        emit StakeLocked(msg.sender, stake, unstakeDelaySec);
     }
 
     /**
@@ -74,7 +75,7 @@ abstract contract StakeManager is IStakeManager {
         DepositInfo storage info = deposits[msg.sender];
         require(info.unstakeDelaySec != 0, "not staked");
         require(info.staked, "already unstaking");
-        uint64 withdrawTime = uint64(block.timestamp) + info.unstakeDelaySec;
+        uint48 withdrawTime = uint48(block.timestamp) + info.unstakeDelaySec;
         info.withdrawTime = withdrawTime;
         info.staked = false;
         emit StakeUnlocked(msg.sender, withdrawTime);

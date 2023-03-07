@@ -92,11 +92,12 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     }
 
     /// implement template method of BaseAccount
-    function _validateSignature(
-        UserOperation calldata userOp,
-        bytes32 userOpHash,
-        address
-    ) internal virtual override returns (uint256 sigTimeRange) {
+    function _validateSignature(UserOperation calldata userOp, bytes32 userOpHash)
+        internal
+        virtual
+        override
+        returns (uint256 sigTimeRange)
+    {
         if (
             !_validator.validateSignature(
                 sha256(abi.encode(userOpHash)),
