@@ -41,11 +41,18 @@ const deterministicDeployment = (network: string) => {
     }
 }
 
+const optimizedComilerSettings = {
+    version: "0.8.17",
+    settings: {
+        optimizer: { enabled: true, runs: 1000000 },
+        viaIR: true,
+    },
+}
+
 const config: HardhatUserConfig = {
     defaultNetwork: "hardhat",
     networks: {
         hardhat: {
-            hardfork: "merge",
             // If you want to do some forking set `enabled` to true
             forking: {
                 url: MAINNET_RPC_URL,
@@ -93,11 +100,11 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: "0.8.17",
+                version: "0.8.15",
                 settings: {
                     optimizer: {
                         enabled: true,
-                        runs: 10000,
+                        runs: 1000000,
                     },
                 },
             },
@@ -106,11 +113,15 @@ const config: HardhatUserConfig = {
                 settings: {
                     optimizer: {
                         enabled: true,
-                        runs: 10000,
+                        runs: 1000000,
                     },
                 },
             },
         ],
+        overrides: {
+            "contracts/core/EntryPoint.sol": optimizedComilerSettings,
+            "contracts/samples/SimpleAccount.sol": optimizedComilerSettings,
+        },
     },
     mocha: {
         timeout: 200000, // 200 seconds max for running tests

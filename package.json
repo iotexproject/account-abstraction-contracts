@@ -42,6 +42,7 @@
     },
     "dependencies": {
         "@openzeppelin/contracts": "^4.2.0",
+        "@thehubbleproject/bls": "^0.5.1",
         "dotenv": "^10.0.0"
     },
     "mocha": {
