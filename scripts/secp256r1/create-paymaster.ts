@@ -2,12 +2,12 @@ import { ethers } from "hardhat"
 import * as fs from "fs"
 import * as path from "path"
 import ecPem from "ec-pem"
-import { arrayify, hexConcat, keccak256 } from "ethers/lib/utils"
+import { arrayify, defaultAbiCoder, hexConcat, keccak256 } from "ethers/lib/utils"
 
 import { P256AccountFactory } from "../../typechain/contracts/samples/secp256r1/P256AccountFactory"
 import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
 import { fillUserOp, signOp } from "../utils"
-import { P2565Signer, userOpHash } from "./signer"
+import { P2565Signer } from "./signer"
 
 async function main() {
     const factory = (await ethers.getContract("P256AccountFactory")) as P256AccountFactory
@@ -22,7 +22,7 @@ async function main() {
 
     const publicKey = "0x" + keyPair.getPublicKey("hex").substring(2)
 
-    const index = 0
+    const index = 1
     const account = await factory.getAddress(publicKey, index)
 
     const initCode = hexConcat([
@@ -35,10 +35,14 @@ async function main() {
     }
 
     const fullCreateOp = await fillUserOp(createOp, entryPoint)
+    fullCreateOp.paymasterAndData = hexConcat([paymaster.address, defaultAbiCoder.encode(['uint48', 'uint48'], [0, 0]), '0x' + '00'.repeat(65)])
 
-    const pendingOpHash = userOpHash(fullCreateOp)
+    const validAfter = Math.floor(new Date().getTime() / 1000)
+    const validUntil = validAfter + 86400 // one day
+    const pendingOpHash = await paymaster.getHash(fullCreateOp, validUntil, validAfter)
     const paymasterSignature = await signer.signMessage(arrayify(pendingOpHash))
-    fullCreateOp.paymasterAndData = hexConcat([paymaster.address, paymasterSignature])
+    fullCreateOp.paymasterAndData = hexConcat(
+        [paymaster.address, defaultAbiCoder.encode(['uint48', 'uint48'], [validUntil, validAfter]), paymasterSignature])
 
     const chainId = (await ethers.provider.getNetwork()).chainId
     const signedOp = await signOp(
@@ -47,6 +51,16 @@ async function main() {
         chainId,
         new P2565Signer(keyPair)
     )
+
+    // check paymaster staking
+    const staking = await entryPoint.balanceOf(paymaster.address)
+    if (staking.toString() === "0") {
+        console.log(`deposit staking to paymaster: ${paymaster.address}`)
+        const tx = await entryPoint.depositTo(paymaster.address, {value: ethers.utils.parseEther("2.0")})
+        await tx.wait()
+    } else {
+        console.log(`paymaster staking amount: ${ethers.utils.formatEther(staking)}`)
+    }
 
     const err = await entryPoint.callStatic.simulateValidation(signedOp).catch((e) => e)
     if (err.errorName === "FailedOp") {

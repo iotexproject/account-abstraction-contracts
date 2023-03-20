@@ -52,6 +52,13 @@ async function main() {
         new P2565Signer(keyPair)
     )
 
+    const err = await entryPoint.callStatic.simulateValidation(signedOp).catch((e) => e)
+    if (err.errorName === "FailedOp") {
+        console.error(`simulate op error ${err.errorArgs.at(-1)}`)
+    } else if (err.errorName !== "ValidationResult") {
+        console.error(`unknow error ${err}`)
+    }
+
     const tx = await entryPoint.connect(bundler).handleOps([signedOp], bundler.address)
     console.log(`create account tx: ${tx.hash}`)
 }

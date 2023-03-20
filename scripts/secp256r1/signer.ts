@@ -43,25 +43,3 @@ export class P2565Signer implements AccountSigner {
         return result.signature
     }
 }
-
-export function userOpHash(op: UserOperation): string {
-    const userOpType = {
-        components: [
-            { type: "address", name: "sender" },
-            { type: "uint256", name: "nonce" },
-            { type: "bytes32", name: "initCode" },
-            { type: "bytes32", name: "callData" },
-            { type: "uint256", name: "callGasLimit" },
-            { type: "uint256", name: "verificationGasLimit" },
-            { type: "uint256", name: "preVerificationGas" },
-            { type: "uint256", name: "maxFeePerGas" },
-            { type: "uint256", name: "maxPriorityFeePerGas" },
-        ],
-        name: "userOp",
-        type: "tuple",
-    }
-    const op1 = { ...op }
-    op1.initCode = keccak256(op.initCode)
-    op1.callData = keccak256(op.callData)
-    return keccak256(defaultAbiCoder.encode([userOpType as any], [{ ...op1 }]))
-}
