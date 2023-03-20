@@ -35,14 +35,21 @@ async function main() {
     }
 
     const fullCreateOp = await fillUserOp(createOp, entryPoint)
-    fullCreateOp.paymasterAndData = hexConcat([paymaster.address, defaultAbiCoder.encode(['uint48', 'uint48'], [0, 0]), '0x' + '00'.repeat(65)])
+    fullCreateOp.paymasterAndData = hexConcat([
+        paymaster.address,
+        defaultAbiCoder.encode(["uint48", "uint48"], [0, 0]),
+        "0x" + "00".repeat(65),
+    ])
 
     const validAfter = Math.floor(new Date().getTime() / 1000)
     const validUntil = validAfter + 86400 // one day
     const pendingOpHash = await paymaster.getHash(fullCreateOp, validUntil, validAfter)
     const paymasterSignature = await signer.signMessage(arrayify(pendingOpHash))
-    fullCreateOp.paymasterAndData = hexConcat(
-        [paymaster.address, defaultAbiCoder.encode(['uint48', 'uint48'], [validUntil, validAfter]), paymasterSignature])
+    fullCreateOp.paymasterAndData = hexConcat([
+        paymaster.address,
+        defaultAbiCoder.encode(["uint48", "uint48"], [validUntil, validAfter]),
+        paymasterSignature,
+    ])
 
     const chainId = (await ethers.provider.getNetwork()).chainId
     const signedOp = await signOp(
@@ -56,7 +63,9 @@ async function main() {
     const staking = await entryPoint.balanceOf(paymaster.address)
     if (staking.toString() === "0") {
         console.log(`deposit staking to paymaster: ${paymaster.address}`)
-        const tx = await entryPoint.depositTo(paymaster.address, {value: ethers.utils.parseEther("2.0")})
+        const tx = await entryPoint.depositTo(paymaster.address, {
+            value: ethers.utils.parseEther("2.0"),
+        })
         await tx.wait()
     } else {
         console.log(`paymaster staking amount: ${ethers.utils.formatEther(staking)}`)

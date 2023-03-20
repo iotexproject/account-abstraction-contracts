@@ -7,14 +7,12 @@ import { arrayify, hexConcat } from "ethers/lib/utils"
 import { P256AccountFactory } from "../../typechain/contracts/samples/secp256r1/P256AccountFactory"
 import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
 import { fillUserOp, signOp } from "../utils"
-import { P2565Signer, userOpHash } from "./signer"
+import { P2565Signer } from "./signer"
 
 async function main() {
     const factory = (await ethers.getContract("P256AccountFactory")) as P256AccountFactory
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
-    const paymaster = await ethers.getContract("VerifyingPaymaster")
 
-    const signer = new ethers.Wallet(process.env.PRIVATE_KEY!)
     const bundler = new ethers.Wallet(process.env.BUNDLER!, ethers.provider)
 
     const keyContent = fs.readFileSync(path.join(__dirname, "key.pem"))
