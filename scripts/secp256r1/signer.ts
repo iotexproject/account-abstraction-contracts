@@ -1,11 +1,7 @@
 import crypto from "crypto"
 import { bufferToHex, sha256 } from "ethereumjs-util"
-import { utils } from "ethers"
-import ecPem from "ec-pem"
-import { AccountSigner, UserOperation } from "../utils"
-import { defaultAbiCoder, keccak256 } from "ethers/lib/utils"
-
-const abiCoder = new utils.AbiCoder()
+import { AccountSigner } from "../utils"
+import { defaultAbiCoder } from "ethers/lib/utils"
 
 export const sign = (keyPair, message) => {
     const messageHash = bufferToHex(sha256(message))
@@ -18,7 +14,7 @@ export const sign = (keyPair, message) => {
     const xlength = 2 * ("0x" + sigString.slice(6, 8))
     sigString = sigString.slice(8)
     const signatureArray = ["0x" + sigString.slice(0, xlength), "0x" + sigString.slice(xlength + 4)]
-    const signature = abiCoder.encode(
+    const signature = defaultAbiCoder.encode(
         ["uint256", "uint256"],
         [signatureArray[0], signatureArray[1]]
     )
