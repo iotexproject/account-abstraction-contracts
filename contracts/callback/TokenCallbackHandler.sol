@@ -1,7 +1,5 @@
-// SPDX-License-Identifier: GPL-3.0
-pragma solidity ^0.8.12;
-
-/* solhint-disable no-empty-blocks */
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/introspection/IERC165.sol";
 import "@openzeppelin/contracts/token/ERC777/IERC777Recipient.sol";

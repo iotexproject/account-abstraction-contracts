@@ -4,8 +4,8 @@ import * as path from "path"
 import ecPem from "ec-pem"
 import { arrayify, defaultAbiCoder, hexConcat, keccak256 } from "ethers/lib/utils"
 
-import { P256AccountFactory } from "../../typechain/contracts/samples/secp256r1/P256AccountFactory"
-import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
+import { P256AccountFactory } from "../../typechain"
+import { EntryPoint } from "@account-abstraction/contracts"
 import { fillUserOp, signOp } from "../utils"
 import { P2565Signer } from "./signer"
 

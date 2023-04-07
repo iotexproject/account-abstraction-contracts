@@ -1,7 +1,7 @@
 import { BigNumber, BigNumberish, Contract, Signer, Wallet } from "ethers"
 import { BytesLike } from "@ethersproject/bytes"
 import { arrayify, defaultAbiCoder, hexDataSlice, keccak256 } from "ethers/lib/utils"
-import { EntryPoint } from "../typechain/contracts/core/EntryPoint"
+import { EntryPoint } from "@account-abstraction/contracts"
 import { ethers } from "hardhat"
 
 export interface UserOperation {

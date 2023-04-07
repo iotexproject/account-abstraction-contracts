@@ -2,10 +2,10 @@ import { ethers } from "hardhat"
 import * as fs from "fs"
 import * as path from "path"
 import ecPem from "ec-pem"
-import { arrayify, hexConcat } from "ethers/lib/utils"
+import { hexConcat } from "ethers/lib/utils"
 
-import { P256AccountFactory } from "../../typechain/contracts/samples/secp256r1/P256AccountFactory"
-import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
+import { P256AccountFactory } from "../../typechain"
+import { EntryPoint } from "@account-abstraction/contracts"
 import { fillUserOp, signOp } from "../utils"
 import { P2565Signer } from "./signer"
 

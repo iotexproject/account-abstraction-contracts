@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import "./ISecp256r1.sol";
+import "../../interfaces/ISecp256r1.sol";
 
 contract Secp256r1 is ISecp256r1 {
     function validateSignature(

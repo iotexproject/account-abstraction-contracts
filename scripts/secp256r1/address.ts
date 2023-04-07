@@ -4,8 +4,8 @@ import * as path from "path"
 import ecPem from "ec-pem"
 import { hexConcat } from "ethers/lib/utils"
 
-import { P256AccountFactory } from "../../typechain/contracts/samples/secp256r1/P256AccountFactory"
-import { EntryPoint } from "../../typechain/contracts/core/EntryPoint"
+import { P256AccountFactory } from "../../typechain"
+import { EntryPoint } from "@account-abstraction/contracts"
 
 async function main() {
     const factory = (await ethers.getContract("P256AccountFactory")) as P256AccountFactory

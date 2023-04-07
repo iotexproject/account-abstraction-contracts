@@ -4,10 +4,9 @@ pragma solidity ^0.8.0;
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
-
-import "../../core/BaseAccount.sol";
-import "../callback/TokenCallbackHandler.sol";
-import "./ISecp256r1.sol";
+import "@account-abstraction/contracts/core/BaseAccount.sol";
+import "../../callback/TokenCallbackHandler.sol";
+import "../../interfaces/ISecp256r1.sol";
 
 /**
  * minimal p256 account.

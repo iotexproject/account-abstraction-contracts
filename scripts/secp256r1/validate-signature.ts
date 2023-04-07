@@ -3,7 +3,7 @@ import * as fs from "fs"
 import * as path from "path"
 import ecPem from "ec-pem"
 
-import { Secp256r1 } from "../../typechain/contracts/samples/secp256r1/Secp256r1"
+import { Secp256r1 } from "../../typechain"
 import { sign } from "./signer"
 
 async function main() {
