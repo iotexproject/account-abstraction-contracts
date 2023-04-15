@@ -13,7 +13,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         from: deployer,
         args: [entryPoint.address, deployer],
         log: true,
-        deterministicDeployment: true,
+        deterministicDeployment: false,
     })
 
     if (paymaster.newlyDeployed) {
