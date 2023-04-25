@@ -5,7 +5,7 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@account-abstraction/contracts/core/BaseAccount.sol";
-import "../../callback/TokenCallbackHandler.sol";
+import "@account-abstraction/contracts/samples/callback/TokenCallbackHandler.sol";
 import "../../interfaces/ISecp256r1.sol";
 
 /**
