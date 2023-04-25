@@ -17,12 +17,7 @@ import "../../interfaces/ISecp256r1.sol";
 contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {
     using ECDSA for bytes32;
 
-    uint256 private _nonce;
     bytes public publicKey;
-
-    function nonce() public view virtual override returns (uint256) {
-        return _nonce;
-    }
 
     function entryPoint() public view virtual override returns (IEntryPoint) {
         return _entryPoint;
@@ -86,11 +81,6 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     }
 
     /// implement template method of BaseAccount
-    function _validateAndUpdateNonce(UserOperation calldata userOp) internal override {
-        require(_nonce++ == userOp.nonce, "account: invalid nonce");
-    }
-
-    /// implement template method of BaseAccount
     function _validateSignature(UserOperation calldata userOp, bytes32 userOpHash)
         internal
         virtual
@@ -148,8 +138,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         uint256 amount,
         bytes calldata signature
     ) public {
-        bytes32 hash = keccak256(abi.encode(withdrawAddress, amount, _nonce));
-
+        bytes32 hash = keccak256(abi.encode(withdrawAddress, amount, getNonce(), block.chainid));
         require(
             _validator.validateSignature(sha256(abi.encode(hash)), signature, publicKey),
             "signature invalid"
