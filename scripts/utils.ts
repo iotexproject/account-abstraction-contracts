@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, Contract, Signer, Wallet } from "ethers"
 import { BytesLike } from "@ethersproject/bytes"
-import { arrayify, defaultAbiCoder, hexDataSlice, keccak256 } from "ethers/lib/utils"
+import { arrayify, defaultAbiCoder, hexDataSlice, hexlify, keccak256 } from "ethers/lib/utils"
 import { EntryPoint } from "@account-abstraction/contracts"
 import { ethers } from "hardhat"
 
@@ -275,4 +275,23 @@ export async function fillUserOp(
         op2.preVerificationGas = callDataCost(packUserOp(op2, false))
     }
     return op2
+}
+
+export function deepHexlify (obj: any): any {
+    if (typeof obj === 'function') {
+      return undefined
+    }
+    if (obj == null || typeof obj === 'string' || typeof obj === 'boolean') {
+      return obj
+    } else if (obj._isBigNumber != null || typeof obj !== 'object') {
+      return hexlify(obj).replace(/^0x0/, '0x')
+    }
+    if (Array.isArray(obj)) {
+      return obj.map(member => deepHexlify(member))
+    }
+    return Object.keys(obj)
+      .reduce((set, key) => ({
+        ...set,
+        [key]: deepHexlify(obj[key])
+      }), {})
 }
