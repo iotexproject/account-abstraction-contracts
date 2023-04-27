@@ -43,46 +43,23 @@ export function getUserOpHash(op: UserOperation, entryPoint: string, chainId: nu
 
 export function packUserOp(op: UserOperation, forSignature = true): string {
     if (forSignature) {
-        // lighter signature scheme (must match UserOperation#pack): do encode a zero-length signature, but strip afterwards the appended zero-length value
-        const userOpType = {
-            components: [
-                { type: "address", name: "sender" },
-                { type: "uint256", name: "nonce" },
-                { type: "bytes", name: "initCode" },
-                { type: "bytes", name: "callData" },
-                { type: "uint256", name: "callGasLimit" },
-                { type: "uint256", name: "verificationGasLimit" },
-                { type: "uint256", name: "preVerificationGas" },
-                { type: "uint256", name: "maxFeePerGas" },
-                { type: "uint256", name: "maxPriorityFeePerGas" },
-                { type: "bytes", name: "paymasterAndData" },
-                { type: "bytes", name: "signature" },
-            ],
-            name: "userOp",
-            type: "tuple",
-        }
-        let encoded = defaultAbiCoder.encode([userOpType as any], [{ ...op, signature: "0x" }])
-        // remove leading word (total length) and trailing word (zero-length signature)
-        encoded = "0x" + encoded.slice(66, encoded.length - 64)
-        return encoded
+        return defaultAbiCoder.encode(
+          ['address', 'uint256', 'bytes32', 'bytes32',
+            'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
+            'bytes32'],
+          [op.sender, op.nonce, keccak256(op.initCode), keccak256(op.callData),
+            op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
+            keccak256(op.paymasterAndData)])
+      } else {
+        // for the purpose of calculating gas cost encode also signature (and no keccak of bytes)
+        return defaultAbiCoder.encode(
+          ['address', 'uint256', 'bytes', 'bytes',
+            'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
+            'bytes', 'bytes'],
+          [op.sender, op.nonce, op.initCode, op.callData,
+            op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
+            op.paymasterAndData, op.signature])
     }
-    const typevalues = [
-        { type: "address", val: op.sender },
-        { type: "uint256", val: op.nonce },
-        { type: "bytes", val: op.initCode },
-        { type: "bytes", val: op.callData },
-        { type: "uint256", val: op.callGasLimit },
-        { type: "uint256", val: op.verificationGasLimit },
-        { type: "uint256", val: op.preVerificationGas },
-        { type: "uint256", val: op.maxFeePerGas },
-        { type: "uint256", val: op.maxPriorityFeePerGas },
-        { type: "bytes", val: op.paymasterAndData },
-    ]
-    if (!forSignature) {
-        // for the purpose of calculating gas cost, also hash signature
-        typevalues.push({ type: "bytes", val: op.signature })
-    }
-    return encode(typevalues, forSignature)
 }
 
 function encode(typevalues: Array<{ type: string; val: any }>, forSignature: boolean): string {
@@ -263,8 +240,8 @@ export async function fillUserOp(
     }
     if (op1.nonce == null) {
         if (provider == null) throw new Error("must have entryPoint to autofill nonce")
-        const c = new Contract(op.sender!, ["function nonce() view returns(uint256)"], provider)
-        op1.nonce = await c.nonce().catch(rethrow())
+        const c = new Contract(op.sender!, ["function getNonce() view returns(uint256)"], provider)
+        op1.nonce = await c.getNonce().catch(rethrow())
     }
     if (op1.callGasLimit == null && op.callData != null) {
         if (provider == null) throw new Error("must have entryPoint for callGasLimit estimate")

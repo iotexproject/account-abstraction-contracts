@@ -14,11 +14,12 @@ async function main() {
     const keyPair = ecPem.loadPrivateKey(keyContent)
 
     const publicKey = "0x" + keyPair.getPublicKey("hex").substring(2)
-    const address = await factory.getAddress(publicKey, 0)
+    const index = 0
+    const address = await factory.getAddress(publicKey, index)
 
     const initCode = hexConcat([
         factory.address,
-        factory.interface.encodeFunctionData("createAccount", [publicKey, 0]),
+        factory.interface.encodeFunctionData("createAccount", [publicKey, index]),
     ])
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
 

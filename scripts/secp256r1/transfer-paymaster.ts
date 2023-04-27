@@ -65,9 +65,12 @@ async function main() {
     const err = await entryPoint.callStatic.simulateValidation(signedOp).catch((e) => e)
     if (err.errorName === "FailedOp") {
         console.error(`simulate op error ${err.errorArgs.at(-1)}`)
+        return
     } else if (err.errorName !== "ValidationResult") {
         console.error(`unknow error ${err}`)
+        return
     }
+    console.log(`simulate op success`)
 
     const tx = await entryPoint.connect(bundler).handleOps([signedOp], bundler.address)
     console.log(`transfer use paymaster tx: ${tx.hash}`)

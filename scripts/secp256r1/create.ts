@@ -19,17 +19,16 @@ async function main() {
     const keyPair = ecPem.loadPrivateKey(keyContent)
 
     const publicKey = "0x" + keyPair.getPublicKey("hex").substring(2)
-
-    const account = await factory.getAddress(publicKey, 0)
+    const index = 0
+    const account = await factory.getAddress(publicKey, index)
 
     const initCode = hexConcat([
         factory.address,
-        factory.interface.encodeFunctionData("createAccount", [publicKey, 0]),
+        factory.interface.encodeFunctionData("createAccount", [publicKey, index]),
     ])
     const createOp = {
         sender: account,
         initCode: initCode,
-        verificationGasLimit: 500000,
     }
 
     const fullCreateOp = await fillUserOp(createOp, entryPoint)
@@ -37,9 +36,10 @@ async function main() {
     const stake = await entryPoint.balanceOf(account)
     if (stake.isZero()) {
         console.log(`deposit gas for account ${account}`)
-        await entryPoint
+        const tx = await entryPoint
             .connect(bundler)
             .depositTo(account, { value: ethers.utils.parseEther("10") })
+        await tx.wait()
     }
 
     const chainId = (await ethers.provider.getNetwork()).chainId
@@ -53,12 +53,15 @@ async function main() {
     const err = await entryPoint.callStatic.simulateValidation(signedOp).catch((e) => e)
     if (err.errorName === "FailedOp") {
         console.error(`simulate op error ${err.errorArgs.at(-1)}`)
+        return
     } else if (err.errorName !== "ValidationResult") {
         console.error(`unknow error ${err}`)
+        return
     }
+    console.log(`simulate op success`)
 
     const tx = await entryPoint.connect(bundler).handleOps([signedOp], bundler.address)
-    console.log(`create account tx: ${tx.hash}`)
+    console.log(`create account tx: ${tx.hash}, account: ${account}`)
 }
 
 main()
