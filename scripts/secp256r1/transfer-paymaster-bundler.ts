@@ -14,10 +14,8 @@ async function main() {
     const factory = (await ethers.getContract("P256AccountFactory")) as P256AccountFactory
     const accountTpl = await ethers.getContractFactory("P256Account")
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
-    const paymaster = await ethers.getContract("VerifyingPaymaster")
+    const paymaster = new JsonRpcProvider("http://localhost:8888")
     const bundler = new JsonRpcProvider("http://localhost:4337")
-
-    const signer = new ethers.Wallet(process.env.PRIVATE_KEY!)
 
     const keyContent = fs.readFileSync(path.join(__dirname, "key.pem"))
     const keyPair = ecPem.loadPrivateKey(keyContent)
@@ -40,21 +38,10 @@ async function main() {
     }
 
     const fullCreateOp = await fillUserOp(transferOp, entryPoint)
-    fullCreateOp.paymasterAndData = hexConcat([
-        paymaster.address,
-        defaultAbiCoder.encode(["uint48", "uint48"], [0, 0]),
-        "0x" + "00".repeat(65),
-    ])
+    let hexifiedUserOp = deepHexlify(await resolveProperties(fullCreateOp))
+    let result = await paymaster.send("eth_signVerifyingPaymaster", [hexifiedUserOp])
 
-    const validAfter = Math.floor(new Date().getTime() / 1000)
-    const validUntil = validAfter + 86400 // one day
-    const pendingOpHash = await paymaster.getHash(fullCreateOp, validUntil, validAfter)
-    const paymasterSignature = await signer.signMessage(arrayify(pendingOpHash))
-    fullCreateOp.paymasterAndData = hexConcat([
-        paymaster.address,
-        defaultAbiCoder.encode(["uint48", "uint48"], [validUntil, validAfter]),
-        paymasterSignature,
-    ])
+    fullCreateOp.paymasterAndData = result
 
     const chainId = (await ethers.provider.getNetwork()).chainId
     const signedOp = await signOp(
@@ -74,8 +61,8 @@ async function main() {
     }
     console.log(`simulate op success`)
 
-    const hexifiedUserOp = deepHexlify(await resolveProperties(signedOp))
-    const result = await bundler.send("eth_sendUserOperation", [hexifiedUserOp, entryPoint.address])
+    hexifiedUserOp = deepHexlify(await resolveProperties(signedOp))
+    result = await bundler.send("eth_sendUserOperation", [hexifiedUserOp, entryPoint.address])
     console.log(`transfer use bundler success opHash: ${result}`)
 }
 
