@@ -15,7 +15,7 @@ async function main() {
     const accountTpl = await ethers.getContractFactory("P256Account")
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
     const paymaster = await ethers.getContract("VerifyingPaymaster")
-    const bundler = new JsonRpcProvider("http://localhost:4337");
+    const bundler = new JsonRpcProvider("http://localhost:4337")
 
     const signer = new ethers.Wallet(process.env.PRIVATE_KEY!)
 
@@ -75,7 +75,7 @@ async function main() {
     console.log(`simulate op success`)
 
     const hexifiedUserOp = deepHexlify(await resolveProperties(signedOp))
-    const result = await bundler.send('eth_sendUserOperation', [hexifiedUserOp, entryPoint.address])
+    const result = await bundler.send("eth_sendUserOperation", [hexifiedUserOp, entryPoint.address])
     console.log(`transfer use bundler result: ${JSON.stringify(result)}`)
 }
 

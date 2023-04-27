@@ -44,21 +44,61 @@ export function getUserOpHash(op: UserOperation, entryPoint: string, chainId: nu
 export function packUserOp(op: UserOperation, forSignature = true): string {
     if (forSignature) {
         return defaultAbiCoder.encode(
-          ['address', 'uint256', 'bytes32', 'bytes32',
-            'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
-            'bytes32'],
-          [op.sender, op.nonce, keccak256(op.initCode), keccak256(op.callData),
-            op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
-            keccak256(op.paymasterAndData)])
-      } else {
+            [
+                "address",
+                "uint256",
+                "bytes32",
+                "bytes32",
+                "uint256",
+                "uint256",
+                "uint256",
+                "uint256",
+                "uint256",
+                "bytes32",
+            ],
+            [
+                op.sender,
+                op.nonce,
+                keccak256(op.initCode),
+                keccak256(op.callData),
+                op.callGasLimit,
+                op.verificationGasLimit,
+                op.preVerificationGas,
+                op.maxFeePerGas,
+                op.maxPriorityFeePerGas,
+                keccak256(op.paymasterAndData),
+            ]
+        )
+    } else {
         // for the purpose of calculating gas cost encode also signature (and no keccak of bytes)
         return defaultAbiCoder.encode(
-          ['address', 'uint256', 'bytes', 'bytes',
-            'uint256', 'uint256', 'uint256', 'uint256', 'uint256',
-            'bytes', 'bytes'],
-          [op.sender, op.nonce, op.initCode, op.callData,
-            op.callGasLimit, op.verificationGasLimit, op.preVerificationGas, op.maxFeePerGas, op.maxPriorityFeePerGas,
-            op.paymasterAndData, op.signature])
+            [
+                "address",
+                "uint256",
+                "bytes",
+                "bytes",
+                "uint256",
+                "uint256",
+                "uint256",
+                "uint256",
+                "uint256",
+                "bytes",
+                "bytes",
+            ],
+            [
+                op.sender,
+                op.nonce,
+                op.initCode,
+                op.callData,
+                op.callGasLimit,
+                op.verificationGasLimit,
+                op.preVerificationGas,
+                op.maxFeePerGas,
+                op.maxPriorityFeePerGas,
+                op.paymasterAndData,
+                op.signature,
+            ]
+        )
     }
 }
 
@@ -277,21 +317,23 @@ export async function fillUserOp(
     return op2
 }
 
-export function deepHexlify (obj: any): any {
-    if (typeof obj === 'function') {
-      return undefined
+export function deepHexlify(obj: any): any {
+    if (typeof obj === "function") {
+        return undefined
     }
-    if (obj == null || typeof obj === 'string' || typeof obj === 'boolean') {
-      return obj
-    } else if (obj._isBigNumber != null || typeof obj !== 'object') {
-      return hexlify(obj).replace(/^0x0/, '0x')
+    if (obj == null || typeof obj === "string" || typeof obj === "boolean") {
+        return obj
+    } else if (obj._isBigNumber != null || typeof obj !== "object") {
+        return hexlify(obj).replace(/^0x0/, "0x")
     }
     if (Array.isArray(obj)) {
-      return obj.map(member => deepHexlify(member))
+        return obj.map((member) => deepHexlify(member))
     }
-    return Object.keys(obj)
-      .reduce((set, key) => ({
-        ...set,
-        [key]: deepHexlify(obj[key])
-      }), {})
+    return Object.keys(obj).reduce(
+        (set, key) => ({
+            ...set,
+            [key]: deepHexlify(obj[key]),
+        }),
+        {}
+    )
 }
