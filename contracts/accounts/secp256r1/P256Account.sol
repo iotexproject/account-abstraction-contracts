@@ -6,7 +6,10 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@account-abstraction/contracts/core/BaseAccount.sol";
 import "@account-abstraction/contracts/samples/callback/TokenCallbackHandler.sol";
+import "solidity-dkim/src/lib/BytesUtils.sol";
 import "../../interfaces/ISecp256r1.sol";
+import "../../interfaces/IDkimVerifier.sol";
+import "../../interfaces/IEmailGuardian.sol";
 
 /**
  * minimal p256 account.
@@ -17,7 +20,9 @@ import "../../interfaces/ISecp256r1.sol";
 contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {
     using ECDSA for bytes32;
 
+    bytes32 public email;
     bytes public publicKey;
+    mapping(bytes32 => bool) public nullifierHashes;
 
     function entryPoint() public view virtual override returns (IEntryPoint) {
         return _entryPoint;
@@ -25,12 +30,18 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
 
     IEntryPoint private immutable _entryPoint;
     ISecp256r1 private immutable _validator;
+    IDkimVerifier private immutable _dkimVerifier;
+    IEmailGuardian private immutable _emailGuardian;
 
     event P256AccountInitialized(
         IEntryPoint indexed entryPoint,
-        ISecp256r1 indexed validator,
+        ISecp256r1 validator,
+        IDkimVerifier verifier,
+        IEmailGuardian emailGuardian,
         bytes publicKey
     );
+    event EmailGuardianAdded(bytes32 email);
+    event AccountRecovered(bytes publicKey);
 
     // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
@@ -44,9 +55,16 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         require(msg.sender == address(entryPoint()), "account: not EntryPoint");
     }
 
-    constructor(IEntryPoint anEntryPoint, ISecp256r1 anISecp256r1) {
+    constructor(
+        IEntryPoint anEntryPoint,
+        ISecp256r1 aSecp256r1,
+        IDkimVerifier aDkimVerifier,
+        IEmailGuardian _aEmailGuardian
+    ) {
         _entryPoint = anEntryPoint;
-        _validator = anISecp256r1;
+        _validator = aSecp256r1;
+        _dkimVerifier = aDkimVerifier;
+        _emailGuardian = _aEmailGuardian;
     }
 
     /**
@@ -77,7 +95,13 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     function _initialize(bytes calldata _publicKey) internal virtual {
         publicKey = _publicKey;
 
-        emit P256AccountInitialized(_entryPoint, _validator, publicKey);
+        emit P256AccountInitialized(
+            _entryPoint,
+            _validator,
+            _dkimVerifier,
+            _emailGuardian,
+            publicKey
+        );
     }
 
     /// implement template method of BaseAccount
@@ -145,6 +169,31 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         );
 
         entryPoint().withdrawTo(withdrawAddress, amount);
+    }
+
+    function addEmailGuardian(bytes32 _email) external {
+        require(address(this) == msg.sender, "only owner");
+        _emailGuardian.register(_email);
+        email = _email;
+        emit EmailGuardianAdded(_email);
+    }
+
+    function recovery(
+        bytes32 server,
+        bytes calldata data,
+        bytes calldata signature
+    ) external {
+        bytes32 hash = keccak256(data);
+        require(!nullifierHashes[hash], "used email data");
+        bytes memory from = _dkimVerifier.from(data);
+        require(email == keccak256(from), "error email owner");
+        require(_dkimVerifier.verify(server, data, signature), "error dkim signature");
+        bytes memory subject = _dkimVerifier.subject(data);
+        require(BytesUtils.toUint32(subject, 0) == 1, "error email type");
+
+        publicKey = BytesUtils.slice(subject, 4, subject.length - 4);
+        nullifierHashes[hash] = true;
+        emit AccountRecovered(publicKey);
     }
 
     function _authorizeUpgrade(

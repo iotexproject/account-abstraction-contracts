@@ -10,8 +10,12 @@ import "../../interfaces/ISecp256r1.sol";
 contract P256AccountFactory {
     P256Account public immutable accountImplementation;
 
-    constructor(IEntryPoint _entryPoint, ISecp256r1 _validator) {
-        accountImplementation = new P256Account(_entryPoint, _validator);
+    constructor(
+        IEntryPoint _entryPoint,
+        ISecp256r1 _validator,
+        IDkimVerifier _verifier
+    ) {
+        accountImplementation = new P256Account(_entryPoint, _validator, _verifier);
     }
 
     function createAccount(bytes calldata publicKey, uint256 salt)

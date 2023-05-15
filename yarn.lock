@@ -4252,6 +4252,11 @@ solidity-coverage@^0.8.2:
     shelljs "^0.8.3"
     web3-utils "^1.3.6"
 
+solidity-dkim@^1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/solidity-dkim/-/solidity-dkim-1.0.1.tgz#45c29bb6a546ea53de8bdade02e8933beb60a874"
+  integrity sha512-wKvz7sdl8J62/9moQ6sf253Yo+oQ1+L6nWfOz54v/dSlid2msjz4hMf65jG63WxBgdcRgldtDucsw6BN3b8oaw==
+
 source-map-support@^0.5.13:
   version "0.5.21"
   resolved "https://registry.yarnpkg.com/source-map-support/-/source-map-support-0.5.21.tgz#04fe7c7f9e1ed2d662233c28cb2b35b9f63f6e4f"
