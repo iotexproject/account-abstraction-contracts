@@ -7,23 +7,27 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
     const { deployer } = await getNamedAccounts()
     const { deploy } = deployments
 
-    const validator = await deploy("Secp256r1", {
+    const keys = await deploy("DkimKeys", {
+        from: deployer,
+        args: [],
+        log: true,
+        deterministicDeployment: false,
+    })
+
+    await deploy("DkimVerifier", {
+        from: deployer,
+        args: [keys.address],
+        log: true,
+        deterministicDeployment: true,
+    })
+
+    await deploy("SimpleEmailGuardian", {
         from: deployer,
         args: [],
         log: true,
         deterministicDeployment: true,
     })
-
-    const entryPoint = await ethers.getContract("EntryPoint")
-
-    await deploy("P256AccountFactory", {
-        from: deployer,
-        args: [entryPoint.address, validator.address],
-        log: true,
-        deterministicDeployment: true,
-    })
 }
 
-deploy.tags = ["p256_factory", "p256", "account"]
-deploy.dependencies = ["entrypoint"]
+deploy.tags = ["dkim", "utils"]
 export default deploy
