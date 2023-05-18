@@ -1,0 +1,234 @@
+{
+  "address": "0xd8eC0C598A033d72554fac7807d4308a36Ba8910",
+  "abi": [
+    {
+      "inputs": [],
+      "stateMutability": "nonpayable",
+      "type": "constructor"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "server",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "key",
+          "type": "bytes"
+        }
+      ],
+      "name": "DeleteDKIMKey",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "user",
+          "type": "address"
+        },
+        {
+          "indexed": true,
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "OwnershipTransferred",
+      "type": "event"
+    },
+    {
+      "anonymous": false,
+      "inputs": [
+        {
+          "indexed": false,
+          "internalType": "bytes32",
+          "name": "server",
+          "type": "bytes32"
+        },
+        {
+          "indexed": false,
+          "internalType": "bytes",
+          "name": "key",
+          "type": "bytes"
+        }
+      ],
+      "name": "UpdateDKIMKey",
+      "type": "event"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "server",
+          "type": "bytes32"
+        }
+      ],
+      "name": "getKey",
+      "outputs": [
+        {
+          "internalType": "bytes",
+          "name": "",
+          "type": "bytes"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [],
+      "name": "owner",
+      "outputs": [
+        {
+          "internalType": "address",
+          "name": "",
+          "type": "address"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "server",
+          "type": "bytes32"
+        }
+      ],
+      "name": "removeKey",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "address",
+          "name": "newOwner",
+          "type": "address"
+        }
+      ],
+      "name": "transferOwnership",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    },
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "server",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "key",
+          "type": "bytes"
+        }
+      ],
+      "name": "updateKey",
+      "outputs": [],
+      "stateMutability": "nonpayable",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0x0f338615f66db632b18d29e1a50a3f2f76d86256905cbe09dcba6ada845d52f4",
+  "receipt": {
+    "to": null,
+    "from": "0x7c029553644F5E9442cb576c1056e0f7663Db1Fa",
+    "contractAddress": "0xd8eC0C598A033d72554fac7807d4308a36Ba8910",
+    "transactionIndex": 0,
+    "gasUsed": "781597",
+    "logsBloom": "0x00000000000000000001000000000000000000000000000000000000000000000000000000000000002000000000000000000000000000000000000000000000000000000000008000040000000000000000000008000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000040000000000000000000000000000000000000000000000000010000000000000000000000000000000000000010000000000000000000000000000000000000000000000000000000000000000000000200000000000000000000000000000000000000",
+    "blockHash": "0x0deeaf8b446df2f6e9b7134cf07a0c30f282b552f52efcb605ed6cbaabe2faf3",
+    "transactionHash": "0x0f338615f66db632b18d29e1a50a3f2f76d86256905cbe09dcba6ada845d52f4",
+    "logs": [
+      {
+        "transactionIndex": 0,
+        "blockNumber": 20311616,
+        "transactionHash": "0x0f338615f66db632b18d29e1a50a3f2f76d86256905cbe09dcba6ada845d52f4",
+        "address": "0xd8eC0C598A033d72554fac7807d4308a36Ba8910",
+        "topics": [
+          "0x8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0",
+          "0x0000000000000000000000000000000000000000000000000000000000000000",
+          "0x0000000000000000000000007c029553644f5e9442cb576c1056e0f7663db1fa"
+        ],
+        "data": "0x",
+        "logIndex": 0,
+        "blockHash": "0x0deeaf8b446df2f6e9b7134cf07a0c30f282b552f52efcb605ed6cbaabe2faf3"
+      }
+    ],
+    "blockNumber": 20311616,
+    "cumulativeGasUsed": "781597",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "5bc4cc830a061d3f93b33ee33cf87200",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"server\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"key\",\"type\":\"bytes\"}],\"name\":\"DeleteDKIMKey\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"bytes32\",\"name\":\"server\",\"type\":\"bytes32\"},{\"indexed\":false,\"internalType\":\"bytes\",\"name\":\"key\",\"type\":\"bytes\"}],\"name\":\"UpdateDKIMKey\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"server\",\"type\":\"bytes32\"}],\"name\":\"getKey\",\"outputs\":[{\"internalType\":\"bytes\",\"name\":\"\",\"type\":\"bytes\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"server\",\"type\":\"bytes32\"}],\"name\":\"removeKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"server\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"key\",\"type\":\"bytes\"}],\"name\":\"updateKey\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"solidity-dkim/src/DkimKeys.sol\":\"DkimKeys\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[]},\"sources\":{\"solidity-dkim/lib/solmate/src/auth/Owned.sol\":{\"content\":\"// SPDX-License-Identifier: AGPL-3.0-only\\npragma solidity >=0.8.0;\\n\\n/// @notice Simple single owner authorization mixin.\\n/// @author Solmate (https://github.com/transmissions11/solmate/blob/main/src/auth/Owned.sol)\\nabstract contract Owned {\\n    /*//////////////////////////////////////////////////////////////\\n                                 EVENTS\\n    //////////////////////////////////////////////////////////////*/\\n\\n    event OwnershipTransferred(address indexed user, address indexed newOwner);\\n\\n    /*//////////////////////////////////////////////////////////////\\n                            OWNERSHIP STORAGE\\n    //////////////////////////////////////////////////////////////*/\\n\\n    address public owner;\\n\\n    modifier onlyOwner() virtual {\\n        require(msg.sender == owner, \\\"UNAUTHORIZED\\\");\\n\\n        _;\\n    }\\n\\n    /*//////////////////////////////////////////////////////////////\\n                               CONSTRUCTOR\\n    //////////////////////////////////////////////////////////////*/\\n\\n    constructor(address _owner) {\\n        owner = _owner;\\n\\n        emit OwnershipTransferred(address(0), _owner);\\n    }\\n\\n    /*//////////////////////////////////////////////////////////////\\n                             OWNERSHIP LOGIC\\n    //////////////////////////////////////////////////////////////*/\\n\\n    function transferOwnership(address newOwner) public virtual onlyOwner {\\n        owner = newOwner;\\n\\n        emit OwnershipTransferred(msg.sender, newOwner);\\n    }\\n}\\n\",\"keccak256\":\"0xfedb27d14c508342c33eb067c9a02eabcdb0f9dcf93b04ded1001f580d12d0ea\",\"license\":\"AGPL-3.0-only\"},\"solidity-dkim/src/DkimKeys.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.13;\\n\\nimport \\\"../lib/solmate/src/auth/Owned.sol\\\";\\n\\ncontract DkimKeys is Owned {\\n    event UpdateDKIMKey(bytes32 server, bytes key);\\n    event DeleteDKIMKey(bytes32 server, bytes key);\\n\\n    mapping(bytes32 => bytes) private dkimKeys;\\n\\n    constructor() Owned(msg.sender) {}\\n\\n    function updateKey(bytes32 server, bytes memory key) external onlyOwner {\\n        dkimKeys[server] = key;\\n        emit UpdateDKIMKey(server, key);\\n    }\\n\\n    function removeKey(bytes32 server) external onlyOwner {\\n        bytes memory key = dkimKeys[server];\\n        delete dkimKeys[server];\\n        emit DeleteDKIMKey(server, key);\\n    }\\n\\n    function getKey(bytes32 server) external view returns (bytes memory) {\\n        bytes memory key = dkimKeys[server];\\n        require(key.length > 0, \\\"no key\\\");\\n        return key;\\n    }\\n}\\n\",\"keccak256\":\"0x9fd729127d5f2f065b6e81bc20c74118f2629627bafda0697f0636cd5f790fb7\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50600080546001600160a01b031916339081178255604051909182917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e0908290a35061099b806100616000396000f3fe608060405234801561001057600080fd5b50600436106100675760003560e01c80638da5cb5b116100505780638da5cb5b146100aa578063e2dfd885146100ef578063f2fde38b1461010257600080fd5b806312aaac701461006c578063862642f514610095575b600080fd5b61007f61007a3660046105ac565b610115565b60405161008c9190610630565b60405180910390f35b6100a86100a33660046105ac565b610229565b005b6000546100ca9073ffffffffffffffffffffffffffffffffffffffff1681565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200161008c565b6100a86100fd366004610679565b61039a565b6100a8610110366004610752565b610465565b60008181526001602052604081208054606092919061013390610788565b80601f016020809104026020016040519081016040528092919081815260200182805461015f90610788565b80156101ac5780601f10610181576101008083540402835291602001916101ac565b820191906000526020600020905b81548152906001019060200180831161018f57829003601f168201915b505050505090506000815111610223576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600660248201527f6e6f206b6579000000000000000000000000000000000000000000000000000060448201526064015b60405180910390fd5b92915050565b60005473ffffffffffffffffffffffffffffffffffffffff1633146102aa576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f554e415554484f52495a45440000000000000000000000000000000000000000604482015260640161021a565b600081815260016020526040812080546102c390610788565b80601f01602080910402602001604051908101604052809291908181526020018280546102ef90610788565b801561033c5780601f106103115761010080835404028352916020019161033c565b820191906000526020600020905b81548152906001019060200180831161031f57829003601f168201915b505050600085815260016020526040812093945061035d9392509050610556565b7f39bf28c3d2ffd0db3c9ed61fe6b7c26b30cfd0a33099907ec479c6998f58f641828260405161038e9291906107db565b60405180910390a15050565b60005473ffffffffffffffffffffffffffffffffffffffff16331461041b576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f554e415554484f52495a45440000000000000000000000000000000000000000604482015260640161021a565b6000828152600160205260409020610433828261084b565b507f5a12783564a9746169bd15ead5abe2b0ad28813626c5b4b50d9ea5946373dcab828260405161038e9291906107db565b60005473ffffffffffffffffffffffffffffffffffffffff1633146104e6576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f554e415554484f52495a45440000000000000000000000000000000000000000604482015260640161021a565b600080547fffffffffffffffffffffffff00000000000000000000000000000000000000001673ffffffffffffffffffffffffffffffffffffffff83169081178255604051909133917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a350565b50805461056290610788565b6000825580601f10610572575050565b601f0160209004906000526020600020908101906105909190610593565b50565b5b808211156105a85760008155600101610594565b5090565b6000602082840312156105be57600080fd5b5035919050565b6000815180845260005b818110156105eb576020818501810151868301820152016105cf565b818111156105fd576000602083870101525b50601f017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0169290920160200192915050565b60208152600061064360208301846105c5565b9392505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6000806040838503121561068c57600080fd5b82359150602083013567ffffffffffffffff808211156106ab57600080fd5b818501915085601f8301126106bf57600080fd5b8135818111156106d1576106d161064a565b604051601f82017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0908116603f011681019083821181831017156107175761071761064a565b8160405282815288602084870101111561073057600080fd5b8260208601602083013760006020848301015280955050505050509250929050565b60006020828403121561076457600080fd5b813573ffffffffffffffffffffffffffffffffffffffff8116811461064357600080fd5b600181811c9082168061079c57607f821691505b6020821081036107d5577f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b50919050565b8281526040602082015260006107f460408301846105c5565b949350505050565b601f82111561084657600081815260208120601f850160051c810160208610156108235750805b601f850160051c820191505b818110156108425782815560010161082f565b5050505b505050565b815167ffffffffffffffff8111156108655761086561064a565b610879816108738454610788565b846107fc565b602080601f8311600181146108cc57600084156108965750858301515b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600386901b1c1916600185901b178555610842565b6000858152602081207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08616915b82811015610919578886015182559484019460019091019084016108fa565b508582101561095557878501517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600388901b60f8161c191681555b5050505050600190811b0190555056fea264697066735822122074b746f61708ee8f02434cc5d340089731e70c8a8d74759b9841f523841a5b4764736f6c634300080f0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100675760003560e01c80638da5cb5b116100505780638da5cb5b146100aa578063e2dfd885146100ef578063f2fde38b1461010257600080fd5b806312aaac701461006c578063862642f514610095575b600080fd5b61007f61007a3660046105ac565b610115565b60405161008c9190610630565b60405180910390f35b6100a86100a33660046105ac565b610229565b005b6000546100ca9073ffffffffffffffffffffffffffffffffffffffff1681565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200161008c565b6100a86100fd366004610679565b61039a565b6100a8610110366004610752565b610465565b60008181526001602052604081208054606092919061013390610788565b80601f016020809104026020016040519081016040528092919081815260200182805461015f90610788565b80156101ac5780601f10610181576101008083540402835291602001916101ac565b820191906000526020600020905b81548152906001019060200180831161018f57829003601f168201915b505050505090506000815111610223576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600660248201527f6e6f206b6579000000000000000000000000000000000000000000000000000060448201526064015b60405180910390fd5b92915050565b60005473ffffffffffffffffffffffffffffffffffffffff1633146102aa576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f554e415554484f52495a45440000000000000000000000000000000000000000604482015260640161021a565b600081815260016020526040812080546102c390610788565b80601f01602080910402602001604051908101604052809291908181526020018280546102ef90610788565b801561033c5780601f106103115761010080835404028352916020019161033c565b820191906000526020600020905b81548152906001019060200180831161031f57829003601f168201915b505050600085815260016020526040812093945061035d9392509050610556565b7f39bf28c3d2ffd0db3c9ed61fe6b7c26b30cfd0a33099907ec479c6998f58f641828260405161038e9291906107db565b60405180910390a15050565b60005473ffffffffffffffffffffffffffffffffffffffff16331461041b576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f554e415554484f52495a45440000000000000000000000000000000000000000604482015260640161021a565b6000828152600160205260409020610433828261084b565b507f5a12783564a9746169bd15ead5abe2b0ad28813626c5b4b50d9ea5946373dcab828260405161038e9291906107db565b60005473ffffffffffffffffffffffffffffffffffffffff1633146104e6576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f554e415554484f52495a45440000000000000000000000000000000000000000604482015260640161021a565b600080547fffffffffffffffffffffffff00000000000000000000000000000000000000001673ffffffffffffffffffffffffffffffffffffffff83169081178255604051909133917f8be0079c531659141344cd1fd0a4f28419497f9722a3daafe3b4186f6b6457e09190a350565b50805461056290610788565b6000825580601f10610572575050565b601f0160209004906000526020600020908101906105909190610593565b50565b5b808211156105a85760008155600101610594565b5090565b6000602082840312156105be57600080fd5b5035919050565b6000815180845260005b818110156105eb576020818501810151868301820152016105cf565b818111156105fd576000602083870101525b50601f017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0169290920160200192915050565b60208152600061064360208301846105c5565b9392505050565b7f4e487b7100000000000000000000000000000000000000000000000000000000600052604160045260246000fd5b6000806040838503121561068c57600080fd5b82359150602083013567ffffffffffffffff808211156106ab57600080fd5b818501915085601f8301126106bf57600080fd5b8135818111156106d1576106d161064a565b604051601f82017fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe0908116603f011681019083821181831017156107175761071761064a565b8160405282815288602084870101111561073057600080fd5b8260208601602083013760006020848301015280955050505050509250929050565b60006020828403121561076457600080fd5b813573ffffffffffffffffffffffffffffffffffffffff8116811461064357600080fd5b600181811c9082168061079c57607f821691505b6020821081036107d5577f4e487b7100000000000000000000000000000000000000000000000000000000600052602260045260246000fd5b50919050565b8281526040602082015260006107f460408301846105c5565b949350505050565b601f82111561084657600081815260208120601f850160051c810160208610156108235750805b601f850160051c820191505b818110156108425782815560010161082f565b5050505b505050565b815167ffffffffffffffff8111156108655761086561064a565b610879816108738454610788565b846107fc565b602080601f8311600181146108cc57600084156108965750858301515b7fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600386901b1c1916600185901b178555610842565b6000858152602081207fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffe08616915b82811015610919578886015182559484019460019091019084016108fa565b508582101561095557878501517fffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff600388901b60f8161c191681555b5050505050600190811b0190555056fea264697066735822122074b746f61708ee8f02434cc5d340089731e70c8a8d74759b9841f523841a5b4764736f6c634300080f0033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [
+      {
+        "astId": 22,
+        "contract": "solidity-dkim/src/DkimKeys.sol:DkimKeys",
+        "label": "owner",
+        "offset": 0,
+        "slot": "0",
+        "type": "t_address"
+      },
+      {
+        "astId": 92,
+        "contract": "solidity-dkim/src/DkimKeys.sol:DkimKeys",
+        "label": "dkimKeys",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_bytes32,t_bytes_storage)"
+      }
+    ],
+    "types": {
+      "t_address": {
+        "encoding": "inplace",
+        "label": "address",
+        "numberOfBytes": "20"
+      },
+      "t_bytes32": {
+        "encoding": "inplace",
+        "label": "bytes32",
+        "numberOfBytes": "32"
+      },
+      "t_bytes_storage": {
+        "encoding": "bytes",
+        "label": "bytes",
+        "numberOfBytes": "32"
+      },
+      "t_mapping(t_bytes32,t_bytes_storage)": {
+        "encoding": "mapping",
+        "key": "t_bytes32",
+        "label": "mapping(bytes32 => bytes)",
+        "numberOfBytes": "32",
+        "value": "t_bytes_storage"
+      }
+    }
+  }
+}

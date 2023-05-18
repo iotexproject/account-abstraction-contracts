@@ -18,7 +18,7 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         from: deployer,
         args: [keys.address],
         log: true,
-        deterministicDeployment: true,
+        deterministicDeployment: false,
     })
 
     await deploy("SimpleEmailGuardian", {
