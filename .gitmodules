@@ -1,0 +1,3 @@
+[submodule "lib/solidity-dkim"]
+	path = lib/solidity-dkim
+	url = https://github.com/iotexproject/solidity-dkim.git
