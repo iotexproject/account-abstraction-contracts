@@ -181,7 +181,8 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     function recovery(
         bytes32 server,
         bytes calldata data,
-        bytes calldata signature
+        bytes calldata signature,
+        bytes calldata pubkey
     ) external {
         bytes32 hash = keccak256(data);
         require(!nullifierHashes[hash], "used email data");
@@ -189,7 +190,11 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         require(email == keccak256(from), "error email owner");
         require(_dkimVerifier.verify(server, data, signature), "error dkim signature");
         bytes memory subject = _dkimVerifier.subject(data);
-        require(BytesUtils.toUint32(subject, 0) == 1, "error email type");
+        string memory expectSubject = bytesToHex("01", pubkey);
+        require(
+            keccak256(subject) == keccak256(bytes(expectSubject)),
+            "error email type or pubkey"
+        );
 
         publicKey = BytesUtils.slice(subject, 4, subject.length - 4);
         nullifierHashes[hash] = true;
@@ -200,5 +205,21 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         address /*newImplementation*/
     ) internal virtual override {
         _onlyEntryPoint();
+    }
+
+    function bytesToHex(string memory typ, bytes memory buffer)
+        public
+        pure
+        returns (string memory)
+    {
+        bytes memory converted = new bytes(buffer.length * 2);
+        bytes memory _base = "0123456789abcdef";
+
+        for (uint256 i = 0; i < buffer.length; i++) {
+            converted[i * 2] = _base[uint8(buffer[i]) / _base.length];
+            converted[i * 2 + 1] = _base[uint8(buffer[i]) % _base.length];
+        }
+
+        return string(abi.encodePacked(typ, converted));
     }
 }
