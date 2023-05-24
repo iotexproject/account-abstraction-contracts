@@ -27,6 +27,7 @@
         "@types/chai": "^4.3.0",
         "@types/mocha": "^9.0.0",
         "chai": "^4.3.6",
+        "dotenv": "^10.0.0",
         "ec-pem": "^0.18.0",
         "ethers": "^5.7.1",
         "hardhat": "^2.11.2",
@@ -42,10 +43,7 @@
     },
     "dependencies": {
         "@account-abstraction/contracts": "^0.6.0",
-        "@openzeppelin/contracts": "^4.2.0",
-        "@thehubbleproject/bls": "^0.5.1",
-        "dotenv": "^10.0.0",
-        "solidity-dkim": "^1.0.2"
+        "@openzeppelin/contracts": "^4.2.0"
     },
     "mocha": {
         "timeout": 10000000
