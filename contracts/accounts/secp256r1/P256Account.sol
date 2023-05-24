@@ -6,7 +6,6 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@account-abstraction/contracts/core/BaseAccount.sol";
 import "@account-abstraction/contracts/samples/callback/TokenCallbackHandler.sol";
-import "../../../lib/solidity-dkim/src/lib/BytesUtils.sol";
 import "../../interfaces/ISecp256r1.sol";
 import "../../interfaces/IDkimVerifier.sol";
 import "../../interfaces/IEmailGuardian.sol";
@@ -196,7 +195,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
             "error email type or pubkey"
         );
 
-        publicKey = BytesUtils.slice(subject, 4, subject.length - 4);
+        publicKey = pubkey;
         nullifierHashes[hash] = true;
         emit AccountRecovered(publicKey);
     }

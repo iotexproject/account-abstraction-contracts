@@ -5,7 +5,7 @@ import "../../interfaces/IEmailGuardian.sol";
 
 contract SimpleEmailGuardian is IEmailGuardian {
     mapping(bytes32 => address) private users;
-    mapping(address => bytes32) private emails;
+    mapping(address => bytes32) public emails;
 
     function register(bytes32 email) external override {
         require(users[email] == address(0), "already bind");

@@ -25,10 +25,12 @@ async function main() {
     const index = 0
     const account = await factory.getAddress(publicKey, index)
 
+    console.log(`add email for ${account}...`)
+
     const callData = accountTpl.interface.encodeFunctionData("execute", [
         account,
         0,
-        "0x99a4453183a3351928007a2dd3f6c9385984d49c2b2761c0cb7110ba9a0a80acf3719597",
+        "0x99a4453137c46ee7d1e7eadf71a0aa183942a62007c6b96d9300b177e3b4f721c9989f2c",
     ])
 
     const transferOp = {
