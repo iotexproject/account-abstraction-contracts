@@ -1,5 +1,5 @@
 {
-  "address": "0xab3bEfc4de4c95830A962656827Ddc60e95ECBd3",
+  "address": "0x2e2D3397C11181CCB4f45e4005B882dA98e64bA3",
   "abi": [
     {
       "inputs": [
@@ -34,28 +34,28 @@
       "type": "function"
     }
   ],
-  "transactionHash": "0xae23b318589c2221bfbbc4fefafef1c3646765b9b55ecbd36747e4e76169b1bf",
+  "transactionHash": "0x111fbf916adae262f32537a003eeab5fa95a1a7606184d78a8088fa4b735b260",
   "receipt": {
     "to": "0x355BE1cbfFBf803fdb17E0CB207D051cD9816916",
     "from": "0x7c029553644F5E9442cb576c1056e0f7663Db1Fa",
     "contractAddress": null,
     "transactionIndex": 0,
-    "gasUsed": "185014",
+    "gasUsed": "212050",
     "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
-    "blockHash": "0x6ad94a5bd851e9280842b941b0d4453ae9e4746e8cedb0cb8c7e23c114e5eab5",
-    "transactionHash": "0xae23b318589c2221bfbbc4fefafef1c3646765b9b55ecbd36747e4e76169b1bf",
+    "blockHash": "0x2dbbc0504411cd3d3807eea3e112cf3f7489608b8e4c06406b42e0c91891b859",
+    "transactionHash": "0x111fbf916adae262f32537a003eeab5fa95a1a7606184d78a8088fa4b735b260",
     "logs": [],
-    "blockNumber": 20313299,
-    "cumulativeGasUsed": "185014",
+    "blockNumber": 20420744,
+    "cumulativeGasUsed": "212050",
     "status": 1,
     "byzantium": true
   },
   "args": [],
-  "numDeployments": 1,
-  "solcInputHash": "8235851529ed4bd0787f80f68fb6dd60",
-  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"email\",\"type\":\"bytes32\"}],\"name\":\"account\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"email\",\"type\":\"bytes32\"}],\"name\":\"register\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/accounts/secp256r1/SimpleEmailGuardian.sol\":\"SimpleEmailGuardian\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[]},\"sources\":{\"contracts/accounts/secp256r1/SimpleEmailGuardian.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"../../interfaces/IEmailGuardian.sol\\\";\\n\\ncontract SimpleEmailGuardian is IEmailGuardian {\\n    mapping(bytes32 => address) private users;\\n\\n    function register(bytes32 email) external override {\\n        require(users[email] == address(0), \\\"already bind\\\");\\n        users[email] = msg.sender;\\n    }\\n\\n    function account(bytes32 email) external view override returns (address) {\\n        return users[email];\\n    }\\n}\\n\",\"keccak256\":\"0xd1d1205827be383c74a2abac601b164b6d4458b0856baaad8c3fcc618f5c1658\",\"license\":\"MIT\"},\"contracts/interfaces/IEmailGuardian.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ninterface IEmailGuardian {\\n    function register(bytes32 email) external;\\n\\n    function account(bytes32 email) external view returns (address);\\n}\\n\",\"keccak256\":\"0xc3d25420591dd6db983eb60ced74bc1ea5f8057306cfe56b55f00a925bc2ae2e\",\"license\":\"MIT\"}},\"version\":1}",
-  "bytecode": "0x608060405234801561001057600080fd5b506101c6806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063882358ae1461003b578063e1fa8e841461009a575b600080fd5b610071610049366004610177565b60009081526020819052604090205473ffffffffffffffffffffffffffffffffffffffff1690565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b6100ad6100a8366004610177565b6100af565b005b60008181526020819052604090205473ffffffffffffffffffffffffffffffffffffffff161561013f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f616c72656164792062696e640000000000000000000000000000000000000000604482015260640160405180910390fd5b600090815260208190526040902080547fffffffffffffffffffffffff00000000000000000000000000000000000000001633179055565b60006020828403121561018957600080fd5b503591905056fea2646970667358221220309091113652cd34e9fa2a9d9bbced3f76533bb237d7d7860e4156d3d5a77be864736f6c634300080f0033",
-  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063882358ae1461003b578063e1fa8e841461009a575b600080fd5b610071610049366004610177565b60009081526020819052604090205473ffffffffffffffffffffffffffffffffffffffff1690565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b6100ad6100a8366004610177565b6100af565b005b60008181526020819052604090205473ffffffffffffffffffffffffffffffffffffffff161561013f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f616c72656164792062696e640000000000000000000000000000000000000000604482015260640160405180910390fd5b600090815260208190526040902080547fffffffffffffffffffffffff00000000000000000000000000000000000000001633179055565b60006020828403121561018957600080fd5b503591905056fea2646970667358221220309091113652cd34e9fa2a9d9bbced3f76533bb237d7d7860e4156d3d5a77be864736f6c634300080f0033",
+  "numDeployments": 2,
+  "solcInputHash": "1680f907e4909369862b23e4641e3d20",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.15+commit.e14f2714\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"email\",\"type\":\"bytes32\"}],\"name\":\"account\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"email\",\"type\":\"bytes32\"}],\"name\":\"register\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/accounts/secp256r1/SimpleEmailGuardian.sol\":\"SimpleEmailGuardian\"},\"evmVersion\":\"london\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[]},\"sources\":{\"contracts/accounts/secp256r1/SimpleEmailGuardian.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\nimport \\\"../../interfaces/IEmailGuardian.sol\\\";\\n\\ncontract SimpleEmailGuardian is IEmailGuardian {\\n    mapping(bytes32 => address) private users;\\n    mapping(address => bytes32) private emails;\\n\\n    function register(bytes32 email) external override {\\n        require(users[email] == address(0), \\\"already bind\\\");\\n        bytes32 preEmail = emails[msg.sender];\\n        if (preEmail != 0) {\\n            users[preEmail] = address(0);\\n        }\\n        users[email] = msg.sender;\\n        emails[msg.sender] = email;\\n    }\\n\\n    function account(bytes32 email) external view override returns (address) {\\n        return users[email];\\n    }\\n}\\n\",\"keccak256\":\"0x4bcfae6d6bb53d2d86c035d54a81a5da19b2419c1235d332ee9c9aeec4da2ceb\",\"license\":\"MIT\"},\"contracts/interfaces/IEmailGuardian.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.0;\\n\\ninterface IEmailGuardian {\\n    function register(bytes32 email) external;\\n\\n    function account(bytes32 email) external view returns (address);\\n}\\n\",\"keccak256\":\"0xc3d25420591dd6db983eb60ced74bc1ea5f8057306cfe56b55f00a925bc2ae2e\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610220806100206000396000f3fe608060405234801561001057600080fd5b50600436106100365760003560e01c8063882358ae1461003b578063e1fa8e841461009a575b600080fd5b6100716100493660046101d1565b60009081526020819052604090205473ffffffffffffffffffffffffffffffffffffffff1690565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b6100ad6100a83660046101d1565b6100af565b005b60008181526020819052604090205473ffffffffffffffffffffffffffffffffffffffff161561013f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f616c72656164792062696e640000000000000000000000000000000000000000604482015260640160405180910390fd5b33600090815260016020526040902054801561018a57600081815260208190526040902080547fffffffffffffffffffffffff00000000000000000000000000000000000000001690555b5060008181526020818152604080832080547fffffffffffffffffffffffff0000000000000000000000000000000000000000163390811790915583526001909152902055565b6000602082840312156101e357600080fd5b503591905056fea264697066735822122093f8d8692b811e289e6a0001c6388f709a215e222668e9f4f900e4f575df2ae964736f6c634300080f0033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b50600436106100365760003560e01c8063882358ae1461003b578063e1fa8e841461009a575b600080fd5b6100716100493660046101d1565b60009081526020819052604090205473ffffffffffffffffffffffffffffffffffffffff1690565b60405173ffffffffffffffffffffffffffffffffffffffff909116815260200160405180910390f35b6100ad6100a83660046101d1565b6100af565b005b60008181526020819052604090205473ffffffffffffffffffffffffffffffffffffffff161561013f576040517f08c379a000000000000000000000000000000000000000000000000000000000815260206004820152600c60248201527f616c72656164792062696e640000000000000000000000000000000000000000604482015260640160405180910390fd5b33600090815260016020526040902054801561018a57600081815260208190526040902080547fffffffffffffffffffffffff00000000000000000000000000000000000000001690555b5060008181526020818152604080832080547fffffffffffffffffffffffff0000000000000000000000000000000000000000163390811790915583526001909152902055565b6000602082840312156101e357600080fd5b503591905056fea264697066735822122093f8d8692b811e289e6a0001c6388f709a215e222668e9f4f900e4f575df2ae964736f6c634300080f0033",
   "devdoc": {
     "kind": "dev",
     "methods": {},
@@ -69,12 +69,20 @@
   "storageLayout": {
     "storage": [
       {
-        "astId": 4411,
+        "astId": 8,
         "contract": "contracts/accounts/secp256r1/SimpleEmailGuardian.sol:SimpleEmailGuardian",
         "label": "users",
         "offset": 0,
         "slot": "0",
         "type": "t_mapping(t_bytes32,t_address)"
+      },
+      {
+        "astId": 12,
+        "contract": "contracts/accounts/secp256r1/SimpleEmailGuardian.sol:SimpleEmailGuardian",
+        "label": "emails",
+        "offset": 0,
+        "slot": "1",
+        "type": "t_mapping(t_address,t_bytes32)"
       }
     ],
     "types": {
@@ -87,6 +95,13 @@
         "encoding": "inplace",
         "label": "bytes32",
         "numberOfBytes": "32"
+      },
+      "t_mapping(t_address,t_bytes32)": {
+        "encoding": "mapping",
+        "key": "t_address",
+        "label": "mapping(address => bytes32)",
+        "numberOfBytes": "32",
+        "value": "t_bytes32"
       },
       "t_mapping(t_bytes32,t_address)": {
         "encoding": "mapping",
