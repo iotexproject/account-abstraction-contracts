@@ -2,6 +2,7 @@
 pragma solidity ^0.8.0;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/Strings.sol";
 import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@account-abstraction/contracts/core/BaseAccount.sol";
@@ -189,9 +190,8 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         require(email == keccak256(from), "error email owner");
         require(_dkimVerifier.verify(server, data, signature), "error dkim signature");
         bytes memory subject = _dkimVerifier.subject(data);
-        string memory expectSubject = bytesToHex("01", pubkey);
         require(
-            keccak256(subject) == keccak256(bytes(expectSubject)),
+            keccak256(subject) == keccak256(subjectHex("01", pubkey)),
             "error email type or pubkey"
         );
 
@@ -206,19 +206,16 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         _onlyEntryPoint();
     }
 
-    function bytesToHex(string memory typ, bytes memory buffer)
-        public
-        pure
-        returns (string memory)
-    {
-        bytes memory converted = new bytes(buffer.length * 2);
+    // format: type + chainid + account_address + pubkey
+    function subjectHex(string memory typ, bytes memory pubkey) public view returns (bytes memory) {
+        bytes memory converted = new bytes(pubkey.length * 2);
         bytes memory _base = "0123456789abcdef";
 
-        for (uint256 i = 0; i < buffer.length; i++) {
-            converted[i * 2] = _base[uint8(buffer[i]) / _base.length];
-            converted[i * 2 + 1] = _base[uint8(buffer[i]) % _base.length];
+        for (uint256 i = 0; i < pubkey.length; i++) {
+            converted[i * 2] = _base[uint8(pubkey[i]) / _base.length];
+            converted[i * 2 + 1] = _base[uint8(pubkey[i]) % _base.length];
         }
 
-        return string(abi.encodePacked(typ, converted));
+        return abi.encodePacked(typ, Strings.toString(block.chainid), address(this), converted);
     }
 }
