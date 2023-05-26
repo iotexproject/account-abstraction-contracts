@@ -216,6 +216,12 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
             converted[i * 2 + 1] = _base[uint8(pubkey[i]) % _base.length];
         }
 
-        return abi.encodePacked(typ, Strings.toString(block.chainid), address(this), converted);
+        return
+            abi.encodePacked(
+                typ,
+                Strings.toString(block.chainid),
+                Strings.toHexString(address(this)),
+                converted
+            );
     }
 }

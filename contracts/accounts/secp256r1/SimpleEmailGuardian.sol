@@ -1,9 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "../../interfaces/IEmailGuardian.sol";
 
-contract SimpleEmailGuardian is IEmailGuardian {
+contract SimpleEmailGuardian is IEmailGuardian, Ownable {
     mapping(bytes32 => address) private users;
     mapping(address => bytes32) public emails;
 
@@ -15,6 +16,11 @@ contract SimpleEmailGuardian is IEmailGuardian {
         }
         users[email] = msg.sender;
         emails[msg.sender] = email;
+    }
+
+    function clean(bytes32 email) external onlyOwner {
+        emails[users[email]] = 0;
+        users[email] = address(0);
     }
 
     function account(bytes32 email) external view override returns (address) {
