@@ -26,6 +26,10 @@
 
 ### Core contracts
 
-The contracts under the `contracts/accounts/secp256r1` directory are core contracts for IoTeX account abstraction.
+The Account Abstraction contracts are based on openzeppelin audited contracts EIP 4337 version 0.6. 
 
-Those contract implement a smart contract account use secp256r1 elliptic curve signatures. The `contracts/accounts/secp256r1/Secp256r1.sol` is use IoTeX precompiled contract to verify secp256r1 signature.
+https://github.com/eth-infinitism/account-abstraction/releases/tag/v0.6.0
+
+The contracts located in the `contracts/accounts/secp256r1` directory are core contracts for IoTeX account abstraction. 
+
+These contracts implement a smart contract account that uses secp256r1 elliptic curve signatures. The `contracts/accounts/secp256r1/Secp256r1.sol` contract uses IoTeX precompiled contract to verify secp256r1 signatures.
