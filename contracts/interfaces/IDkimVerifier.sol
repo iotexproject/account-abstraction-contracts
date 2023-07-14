@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 interface IDkimVerifier {
     function from(bytes memory data) external view returns (bytes memory);

@@ -20,13 +20,6 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         log: true,
         deterministicDeployment: false,
     })
-
-    await deploy("SimpleEmailGuardian", {
-        from: deployer,
-        args: [],
-        log: true,
-        deterministicDeployment: false,
-    })
 }
 
 deploy.tags = ["dkim", "utils"]

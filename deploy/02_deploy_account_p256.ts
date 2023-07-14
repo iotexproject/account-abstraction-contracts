@@ -16,11 +16,10 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
 
     const entryPoint = await ethers.getContract("EntryPoint")
     const dkimVerifier = await ethers.getContract("DkimVerifier")
-    const emailGauddian = await ethers.getContract("SimpleEmailGuardian")
 
     await deploy("P256AccountFactory", {
         from: deployer,
-        args: [entryPoint.address, validator.address, dkimVerifier.address, emailGauddian.address],
+        args: [entryPoint.address, validator.address, dkimVerifier.address],
         log: true,
         deterministicDeployment: true,
     })

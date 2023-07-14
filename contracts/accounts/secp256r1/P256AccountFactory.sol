@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/utils/Create2.sol";
 import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
@@ -7,7 +7,6 @@ import "@openzeppelin/contracts/proxy/ERC1967/ERC1967Proxy.sol";
 import "./P256Account.sol";
 import "../../interfaces/ISecp256r1.sol";
 import "../../interfaces/IDkimVerifier.sol";
-import "../../interfaces/IEmailGuardian.sol";
 
 contract P256AccountFactory {
     P256Account public immutable accountImplementation;
@@ -15,10 +14,9 @@ contract P256AccountFactory {
     constructor(
         IEntryPoint _entryPoint,
         ISecp256r1 _validator,
-        IDkimVerifier _verifier,
-        IEmailGuardian _emailGauddian
+        IDkimVerifier _verifier
     ) {
-        accountImplementation = new P256Account(_entryPoint, _validator, _verifier, _emailGauddian);
+        accountImplementation = new P256Account(_entryPoint, _validator, _verifier);
     }
 
     function createAccount(bytes calldata publicKey, uint256 salt)

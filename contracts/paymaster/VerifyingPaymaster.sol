@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@account-abstraction/contracts/core/BasePaymaster.sol";
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
@@ -7,6 +7,8 @@ import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 contract VerifyingPaymaster is BasePaymaster {
     using ECDSA for bytes32;
     using UserOperationLib for UserOperation;
+
+    event SignerChanged(address indexed signer);
 
     address public verifyingSigner;
 
@@ -16,6 +18,7 @@ contract VerifyingPaymaster is BasePaymaster {
 
     constructor(IEntryPoint _entryPoint, address _verifyingSigner) BasePaymaster(_entryPoint) {
         verifyingSigner = _verifyingSigner;
+        emit SignerChanged(_verifyingSigner);
     }
 
     mapping(address => uint256) public senderNonce;
@@ -92,5 +95,6 @@ contract VerifyingPaymaster is BasePaymaster {
 
     function changeSigner(address _verifyingSigner) external onlyOwner {
         verifyingSigner = _verifyingSigner;
+        emit SignerChanged(_verifyingSigner);
     }
 }

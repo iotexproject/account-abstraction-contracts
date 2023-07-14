@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
 import "@openzeppelin/contracts/utils/Strings.sol";
@@ -9,7 +9,6 @@ import "@account-abstraction/contracts/core/BaseAccount.sol";
 import "@account-abstraction/contracts/samples/callback/TokenCallbackHandler.sol";
 import "../../interfaces/ISecp256r1.sol";
 import "../../interfaces/IDkimVerifier.sol";
-import "../../interfaces/IEmailGuardian.sol";
 
 /**
  * minimal p256 account.
@@ -18,6 +17,8 @@ import "../../interfaces/IEmailGuardian.sol";
  *  has a single signer that can send requests through the entryPoint.
  */
 contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {
+    uint256[50] private __gap;
+
     using ECDSA for bytes32;
 
     bytes32 public email;
@@ -31,13 +32,11 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     IEntryPoint private immutable _entryPoint;
     ISecp256r1 private immutable _validator;
     IDkimVerifier private immutable _dkimVerifier;
-    IEmailGuardian private immutable _emailGuardian;
 
     event P256AccountInitialized(
         IEntryPoint indexed entryPoint,
         ISecp256r1 validator,
         IDkimVerifier verifier,
-        IEmailGuardian emailGuardian,
         bytes publicKey
     );
     event EmailGuardianAdded(bytes32 email);
@@ -58,13 +57,11 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     constructor(
         IEntryPoint anEntryPoint,
         ISecp256r1 aSecp256r1,
-        IDkimVerifier aDkimVerifier,
-        IEmailGuardian _aEmailGuardian
+        IDkimVerifier aDkimVerifier
     ) {
         _entryPoint = anEntryPoint;
         _validator = aSecp256r1;
         _dkimVerifier = aDkimVerifier;
-        _emailGuardian = _aEmailGuardian;
     }
 
     /**
@@ -81,10 +78,14 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     /**
      * execute a sequence of transaction
      */
-    function executeBatch(address[] calldata dest, bytes[] calldata func) external onlyEntryPoint {
-        require(dest.length == func.length, "wrong array lengths");
+    function executeBatch(
+        address[] calldata dest,
+        uint256[] calldata values,
+        bytes[] calldata func
+    ) external onlyEntryPoint {
+        require(dest.length == values.length && dest.length == func.length, "wrong array lengths");
         for (uint256 i = 0; i < dest.length; i++) {
-            _call(dest[i], 0, func[i]);
+            _call(dest[i], values[i], func[i]);
         }
     }
 
@@ -95,13 +96,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     function _initialize(bytes calldata _publicKey) internal virtual {
         publicKey = _publicKey;
 
-        emit P256AccountInitialized(
-            _entryPoint,
-            _validator,
-            _dkimVerifier,
-            _emailGuardian,
-            publicKey
-        );
+        emit P256AccountInitialized(_entryPoint, _validator, _dkimVerifier, _publicKey);
     }
 
     /// implement template method of BaseAccount
@@ -147,33 +142,21 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
      * deposit more funds for this account in the entryPoint
      */
     function addDeposit() public payable {
-        (bool req, ) = address(entryPoint()).call{value: msg.value}("");
-        require(req);
+        entryPoint().depositTo{value: msg.value}(address(this));
     }
 
     /**
      * withdraw value from the account's deposit
      * @param withdrawAddress target to send to
      * @param amount to withdraw
-     * @param signature to validate
      */
-    function withdrawDepositTo(
-        address payable withdrawAddress,
-        uint256 amount,
-        bytes calldata signature
-    ) public {
-        bytes32 hash = keccak256(abi.encode(withdrawAddress, amount, getNonce(), block.chainid));
-        require(
-            _validator.validateSignature(sha256(abi.encode(hash)), signature, publicKey),
-            "signature invalid"
-        );
-
+    function withdrawDepositTo(address payable withdrawAddress, uint256 amount) public {
+        require(address(this) == msg.sender, "only owner");
         entryPoint().withdrawTo(withdrawAddress, amount);
     }
 
     function addEmailGuardian(bytes32 _email) external {
         require(address(this) == msg.sender, "only owner");
-        _emailGuardian.register(_email);
         email = _email;
         emit EmailGuardianAdded(_email);
     }

@@ -25,7 +25,7 @@ async function main() {
 
     const publicKey = "0x" + keyPair.getPublicKey("hex").substring(2)
 
-    const index = 0
+    const index = 1
     const account = await factory.getAddress(publicKey, index)
 
     const initCode = hexConcat([
