@@ -42,7 +42,7 @@ const deterministicDeployment = (network: string) => {
 }
 
 const optimizedComilerSettings = {
-    version: "0.8.20",
+    version: "0.8.19",
     settings: {
         optimizer: { enabled: true, runs: 1000000 },
         viaIR: true,
@@ -100,16 +100,7 @@ const config: HardhatUserConfig = {
     solidity: {
         compilers: [
             {
-                version: "0.8.20",
-                settings: {
-                    optimizer: {
-                        enabled: true,
-                        runs: 1000000,
-                    },
-                },
-            },
-            {
-                version: "0.7.6",
+                version: "0.8.19",
                 settings: {
                     optimizer: {
                         enabled: true,
