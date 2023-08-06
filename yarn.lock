@@ -2064,7 +2064,7 @@ ethers@^4.0.40:
     uuid "2.0.1"
     xmlhttprequest "1.8.0"
 
-ethers@^5.7.1:
+ethers@^5.7.1, ethers@^5.7.2:
   version "5.7.2"
   resolved "https://registry.yarnpkg.com/ethers/-/ethers-5.7.2.tgz#3a7deeabbb8c030d4126b24f84e525466145872e"
   integrity sha512-wswUsmWo1aOK8rR7DIKiWSw9DbLWe6x98Jrn8wcTflTVvaXhAMaB5zGAXy0GYQEQp9iO1iSHWVyARQm11zUtyg==
@@ -4690,6 +4690,13 @@ uri-js@^4.2.2:
   integrity sha512-7rKUyy33Q1yc98pQ1DAmLtwX109F7TIfWlW1Ydo8Wl1ii1SeHieeh0HHfPeL2fMXK6z0s8ecKs9frCuLJvndBg==
   dependencies:
     punycode "^2.1.0"
+
+userop@^0.3.2:
+  version "0.3.2"
+  resolved "https://registry.yarnpkg.com/userop/-/userop-0.3.2.tgz#bc76f9839f1665648d991f49ea37c36e08c84bef"
+  integrity sha512-7WbjoH0Brv1nUcB1RbC+l4wmt8a+bu06R/4H5nJKVhnzIkXUYoaj/WG/S/iMvlBna3Dbiev4Qv/o807Xj1HIzA==
+  dependencies:
+    ethers "^5.7.2"
 
 utf8@3.0.0:
   version "3.0.0"

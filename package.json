@@ -43,7 +43,8 @@
     },
     "dependencies": {
         "@account-abstraction/contracts": "^0.6.0",
-        "@openzeppelin/contracts": "^4.9.2"
+        "@openzeppelin/contracts": "^4.9.2",
+        "userop": "^0.3.2"
     },
     "mocha": {
         "timeout": 10000000
