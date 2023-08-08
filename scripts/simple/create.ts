@@ -1,12 +1,10 @@
-import { Client } from "userop"
+import { Client, Presets } from "userop"
 import { ethers } from "hardhat"
-import { Presets } from "userop"
 import { EntryPoint } from "@account-abstraction/contracts"
 
 async function main() {
     const rpc = "https://babel-api.testnet.iotex.io"
-    //const bundlerRpc = "https://bundler.testnet.w3bstream.com"
-    const bundlerRpc = "http://localhost:4337"
+    const bundlerRpc = "https://bundler.testnet.w3bstream.com"
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
     const accountFactory = await ethers.getContract("SimpleAccountFactory")
     const client = await Client.init(rpc, {

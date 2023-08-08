@@ -1,13 +1,10 @@
-import { Client } from "userop"
+import { Client, Presets } from "userop"
 import { ethers } from "hardhat"
-import { Presets } from "userop"
 import { EntryPoint } from "@account-abstraction/contracts"
-import { JsonRpcProvider } from "@ethersproject/providers"
 
 async function main() {
     const rpc = "https://babel-api.testnet.iotex.io"
-    //const bundlerRpc = "https://bundler.testnet.w3bstream.com"
-    const bundlerRpc = "http://localhost:4337"
+    const bundlerRpc = "https://bundler.testnet.w3bstream.com"
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
     const accountFactory = await ethers.getContract("SimpleAccountFactory")
     const accountTpl = await ethers.getContractFactory("P256Account")
@@ -26,10 +23,10 @@ async function main() {
         overrideBundlerRpc: bundlerRpc,
         factory: accountFactory.address,
         entryPoint: entryPoint.address,
-        salt: 1,
+        salt: "1",
         paymasterMiddleware: Presets.Middleware.verifyingPaymaster(
             // paymaster rpc
-            "http://localhost:8888/rpc/1234567890",
+            `https://paymaster.testnet.w3bstream.com/rpc/${process.env.API_KEY}`,
             ""
         ),
     })
