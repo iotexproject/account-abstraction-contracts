@@ -13,7 +13,7 @@ import {
     UserOperationMiddlewareFn,
     Presets,
 } from "userop"
-import { P2565Signer, P256Signature } from "./signature"
+import { P2565Signer, P256Signature } from "./p256-signature"
 
 export const ERC4337 = {
     EntryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
