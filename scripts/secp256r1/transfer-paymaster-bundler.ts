@@ -10,8 +10,7 @@ import { P256Account } from "../userop/p256-account"
 
 async function main() {
     const rpc = "https://babel-api.testnet.iotex.io"
-    const bundlerRpc = "http://localhost:4337"
-    // const bundlerRpc = "https://bundler.testnet.w3bstream.com"
+    const bundlerRpc = "https://bundler.testnet.w3bstream.com"
     const accountFactory = (await ethers.getContract("P256AccountFactory")) as P256AccountFactory
     const accountTpl = await ethers.getContractFactory("P256Account")
     const entryPoint = (await ethers.getContract("EntryPoint")) as EntryPoint
@@ -30,17 +29,17 @@ async function main() {
         "0x",
     ])
 
-    const simpleAccountBuilder = await P256Account.init(signer, rpc, {
+    const accountBuilder = await P256Account.init(signer, rpc, {
         overrideBundlerRpc: bundlerRpc,
         factory: accountFactory.address,
         entryPoint: entryPoint.address,
         salt: 1,
     })
-    simpleAccountBuilder.setCallData(callData)
+    accountBuilder.setCallData(callData)
 
-    const account = simpleAccountBuilder.getSender()
+    const account = accountBuilder.getSender()
 
-    const response = await client.sendUserOperation(simpleAccountBuilder)
+    const response = await client.sendUserOperation(accountBuilder)
     console.log(`Transfer account ${account} ophash: ${response.userOpHash}`)
     const userOperationEvent = await response.wait()
     console.log(`Transfer account ${account} txhash: ${userOperationEvent?.transactionHash}`)
