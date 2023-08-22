@@ -7,8 +7,9 @@ import "@openzeppelin/contracts/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts/proxy/utils/UUPSUpgradeable.sol";
 import "@account-abstraction/contracts/core/BaseAccount.sol";
 import "@account-abstraction/contracts/samples/callback/TokenCallbackHandler.sol";
+
 import "../../interfaces/ISecp256r1.sol";
-import "../../interfaces/IDkimVerifier.sol";
+import "../guardian/EmailGuardian.sol";
 
 /**
  * minimal p256 account.
@@ -21,9 +22,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
 
     using ECDSA for bytes32;
 
-    bytes32 public email;
     bytes public publicKey;
-    mapping(bytes32 => bool) public nullifierHashes;
 
     function entryPoint() public view virtual override returns (IEntryPoint) {
         return _entryPoint;
@@ -31,15 +30,16 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
 
     IEntryPoint private immutable _entryPoint;
     ISecp256r1 private immutable _validator;
-    IDkimVerifier private immutable _dkimVerifier;
+    EmailGuardian private immutable _guardian;
 
     event P256AccountInitialized(
         IEntryPoint indexed entryPoint,
         ISecp256r1 validator,
-        IDkimVerifier verifier,
+        EmailGuardian guardian,
         bytes publicKey
     );
     event EmailGuardianAdded(bytes32 email);
+    event EmailGuardianRemoved();
     event AccountRecovered(bytes publicKey);
 
     // solhint-disable-next-line no-empty-blocks
@@ -57,11 +57,11 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     constructor(
         IEntryPoint anEntryPoint,
         ISecp256r1 aSecp256r1,
-        IDkimVerifier aDkimVerifier
+        EmailGuardian anEmailGuardian
     ) {
         _entryPoint = anEntryPoint;
         _validator = aSecp256r1;
-        _dkimVerifier = aDkimVerifier;
+        _guardian = anEmailGuardian;
     }
 
     /**
@@ -96,7 +96,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     function _initialize(bytes calldata _publicKey) internal virtual {
         publicKey = _publicKey;
 
-        emit P256AccountInitialized(_entryPoint, _validator, _dkimVerifier, _publicKey);
+        emit P256AccountInitialized(_entryPoint, _validator, _guardian, _publicKey);
     }
 
     /// implement template method of BaseAccount
@@ -155,10 +155,16 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         entryPoint().withdrawTo(withdrawAddress, amount);
     }
 
-    function addEmailGuardian(bytes32 _email) external {
+    function addEmailGuardian(bytes32 _email, bytes memory _signature) external {
         require(address(this) == msg.sender, "only owner");
-        email = _email;
+        _guardian.bind(_email, _signature);
         emit EmailGuardianAdded(_email);
+    }
+
+    function removeEmailGuardian() external {
+        require(address(this) == msg.sender, "only owner");
+        _guardian.unbind();
+        emit EmailGuardianRemoved();
     }
 
     function recovery(
@@ -167,19 +173,9 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         bytes calldata signature,
         bytes calldata pubkey
     ) external {
-        bytes32 hash = keccak256(data);
-        require(!nullifierHashes[hash], "used email data");
-        bytes memory from = _dkimVerifier.from(data);
-        require(email == keccak256(from), "error email owner");
-        require(_dkimVerifier.verify(server, data, signature), "error dkim signature");
-        bytes memory subject = _dkimVerifier.subject(data);
-        require(
-            keccak256(subject) == keccak256(subjectHex("01", pubkey)),
-            "error email type or pubkey"
-        );
+        require(_guardian.verify(server, data, signature, pubkey), "guardian verify failure");
 
         publicKey = pubkey;
-        nullifierHashes[hash] = true;
         emit AccountRecovered(publicKey);
     }
 
@@ -187,24 +183,5 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         address /*newImplementation*/
     ) internal virtual override {
         _onlyEntryPoint();
-    }
-
-    // format: type + chainid + account_address + pubkey
-    function subjectHex(string memory typ, bytes memory pubkey) public view returns (bytes memory) {
-        bytes memory converted = new bytes(pubkey.length * 2);
-        bytes memory _base = "0123456789abcdef";
-
-        for (uint256 i = 0; i < pubkey.length; i++) {
-            converted[i * 2] = _base[uint8(pubkey[i]) / _base.length];
-            converted[i * 2 + 1] = _base[uint8(pubkey[i]) % _base.length];
-        }
-
-        return
-            abi.encodePacked(
-                typ,
-                Strings.toString(block.chainid),
-                Strings.toHexString(address(this)),
-                converted
-            );
     }
 }
