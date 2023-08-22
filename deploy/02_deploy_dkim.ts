@@ -14,9 +14,16 @@ const deploy: DeployFunction = async function (hre: HardhatRuntimeEnvironment) {
         deterministicDeployment: false,
     })
 
-    await deploy("DkimVerifier", {
+    const verifier = await deploy("DkimVerifier", {
         from: deployer,
         args: [keys.address],
+        log: true,
+        deterministicDeployment: false,
+    })
+
+    await deploy("EmailGuardian", {
+        from: deployer,
+        args: [verifier.address, deployer],
         log: true,
         deterministicDeployment: false,
     })
