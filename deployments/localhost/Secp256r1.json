@@ -1,0 +1,70 @@
+{
+  "address": "0xf40a8ef65a74E7B0587bf8C1A3eC09E6602B88c8",
+  "abi": [
+    {
+      "inputs": [
+        {
+          "internalType": "bytes32",
+          "name": "message",
+          "type": "bytes32"
+        },
+        {
+          "internalType": "bytes",
+          "name": "signature",
+          "type": "bytes"
+        },
+        {
+          "internalType": "bytes",
+          "name": "publicKey",
+          "type": "bytes"
+        }
+      ],
+      "name": "validateSignature",
+      "outputs": [
+        {
+          "internalType": "bool",
+          "name": "result",
+          "type": "bool"
+        }
+      ],
+      "stateMutability": "view",
+      "type": "function"
+    }
+  ],
+  "transactionHash": "0xec01bdfa5af9862b58026770b0e547b49684f57b1054edd781eb9331532cc490",
+  "receipt": {
+    "to": "0x5FbDB2315678afecb367f032d93F642f64180aa3",
+    "from": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+    "contractAddress": null,
+    "transactionIndex": 0,
+    "gasUsed": "165606",
+    "logsBloom": "0x00000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000",
+    "blockHash": "0xaaf1790da7dcf151f7c63ce5d46e0ddb45b67a6b8a8879851b85d962461eafbe",
+    "transactionHash": "0xec01bdfa5af9862b58026770b0e547b49684f57b1054edd781eb9331532cc490",
+    "logs": [],
+    "blockNumber": 7,
+    "cumulativeGasUsed": "165606",
+    "status": 1,
+    "byzantium": true
+  },
+  "args": [],
+  "numDeployments": 1,
+  "solcInputHash": "be222504d6281d379979e56804b0c406",
+  "metadata": "{\"compiler\":{\"version\":\"0.8.19+commit.7dd6d404\"},\"language\":\"Solidity\",\"output\":{\"abi\":[{\"inputs\":[{\"internalType\":\"bytes32\",\"name\":\"message\",\"type\":\"bytes32\"},{\"internalType\":\"bytes\",\"name\":\"signature\",\"type\":\"bytes\"},{\"internalType\":\"bytes\",\"name\":\"publicKey\",\"type\":\"bytes\"}],\"name\":\"validateSignature\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"result\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"}],\"devdoc\":{\"kind\":\"dev\",\"methods\":{},\"version\":1},\"userdoc\":{\"kind\":\"user\",\"methods\":{},\"version\":1}},\"settings\":{\"compilationTarget\":{\"contracts/accounts/secp256r1/Secp256r1.sol\":\"Secp256r1\"},\"evmVersion\":\"paris\",\"libraries\":{},\"metadata\":{\"bytecodeHash\":\"ipfs\",\"useLiteralContent\":true},\"optimizer\":{\"enabled\":true,\"runs\":1000000},\"remappings\":[]},\"sources\":{\"contracts/accounts/secp256r1/Secp256r1.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.19;\\n\\nimport \\\"../../interfaces/ISecp256r1.sol\\\";\\n\\ncontract Secp256r1 is ISecp256r1 {\\n    function validateSignature(\\n        bytes32 message,\\n        bytes calldata signature,\\n        bytes calldata publicKey\\n    ) external view override returns (bool result) {\\n        bytes32 rs0;\\n        bytes32 rs1;\\n        bytes32 Q0;\\n        bytes32 Q1;\\n\\n        (rs0, rs1) = abi.decode(signature, (bytes32, bytes32));\\n        (Q0, Q1) = abi.decode(publicKey, (bytes32, bytes32));\\n\\n        bytes1 out;\\n        assembly {\\n            // free memory pointer\\n            let input := mload(0x40)\\n\\n            mstore(input, message)\\n            mstore(add(input, 0x20), rs0)\\n            mstore(add(input, 0x40), rs1)\\n            mstore(add(input, 0x60), \\\"\\\\x04\\\")\\n            mstore(add(input, 0x61), Q0)\\n            mstore(add(input, 0x81), Q1)\\n            let success := staticcall(gas(), 0x8001, input, 0xa1, out, 0x1)\\n            switch success\\n            case 0 {\\n                revert(0x0, 0x0)\\n            }\\n            default {\\n                result := mload(out)\\n            }\\n        }\\n    }\\n}\\n\",\"keccak256\":\"0xab4afc7063c2fb0af822f0e6c4a6fc892bb72e91fcd2890952040503ba18b737\",\"license\":\"MIT\"},\"contracts/interfaces/ISecp256r1.sol\":{\"content\":\"// SPDX-License-Identifier: MIT\\npragma solidity ^0.8.19;\\n\\ninterface ISecp256r1 {\\n    function validateSignature(\\n        bytes32 message,\\n        bytes calldata signature,\\n        bytes calldata publicKey\\n    ) external view returns (bool);\\n}\\n\",\"keccak256\":\"0x271a680105de04da3cb1a64961599e855b9d0da94d6f202abda434407b20ca05\",\"license\":\"MIT\"}},\"version\":1}",
+  "bytecode": "0x608060405234801561001057600080fd5b50610208806100206000396000f3fe608060405234801561001057600080fd5b506004361061002b5760003560e01c8063ae7e17f014610030575b600080fd5b61004361003e366004610136565b610057565b604051901515815260200160405180910390f35b600080808080610069888a018a6101b0565b909450925061007a868801886101b0565b809250819350505060006040518b81528560208201528460408201527f0400000000000000000000000000000000000000000000000000000000000000606082015283606182015282608182015260018260a1836180015afa905080801561002b575050519a9950505050505050505050565b60008083601f8401126100ff57600080fd5b50813567ffffffffffffffff81111561011757600080fd5b60208301915083602082850101111561012f57600080fd5b9250929050565b60008060008060006060868803121561014e57600080fd5b85359450602086013567ffffffffffffffff8082111561016d57600080fd5b61017989838a016100ed565b9096509450604088013591508082111561019257600080fd5b5061019f888289016100ed565b969995985093965092949392505050565b600080604083850312156101c357600080fd5b5050803592602090910135915056fea26469706673582212205d59f78d8a164fbdccd022098ad8bcc04ad529cf18176951788f7fc867b7702d64736f6c63430008130033",
+  "deployedBytecode": "0x608060405234801561001057600080fd5b506004361061002b5760003560e01c8063ae7e17f014610030575b600080fd5b61004361003e366004610136565b610057565b604051901515815260200160405180910390f35b600080808080610069888a018a6101b0565b909450925061007a868801886101b0565b809250819350505060006040518b81528560208201528460408201527f0400000000000000000000000000000000000000000000000000000000000000606082015283606182015282608182015260018260a1836180015afa905080801561002b575050519a9950505050505050505050565b60008083601f8401126100ff57600080fd5b50813567ffffffffffffffff81111561011757600080fd5b60208301915083602082850101111561012f57600080fd5b9250929050565b60008060008060006060868803121561014e57600080fd5b85359450602086013567ffffffffffffffff8082111561016d57600080fd5b61017989838a016100ed565b9096509450604088013591508082111561019257600080fd5b5061019f888289016100ed565b969995985093965092949392505050565b600080604083850312156101c357600080fd5b5050803592602090910135915056fea26469706673582212205d59f78d8a164fbdccd022098ad8bcc04ad529cf18176951788f7fc867b7702d64736f6c63430008130033",
+  "devdoc": {
+    "kind": "dev",
+    "methods": {},
+    "version": 1
+  },
+  "userdoc": {
+    "kind": "user",
+    "methods": {},
+    "version": 1
+  },
+  "storageLayout": {
+    "storage": [],
+    "types": null
+  }
+}
