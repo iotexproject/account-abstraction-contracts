@@ -40,7 +40,7 @@ async function main() {
             // email
             "0x37c46ee7d1e7eadf71a0aa183942a62007c6b96d9300b177e3b4f721c9989f2c",
             // signature
-            "0x7d76948c532ad201ade9eab9551759ff3264d6d1db7f76385b756cd92ee4b749379c3069cb4ce88f4ea1710fc8a1b4c98825115f2d616ab2032e77324906b2901c"
+            "0x7d76948c532ad201ade9eab9551759ff3264d6d1db7f76385b756cd92ee4b749379c3069cb4ce88f4ea1710fc8a1b4c98825115f2d616ab2032e77324906b2901c",
         ]),
     ])
     accountBuilder.setCallData(callData)
@@ -58,7 +58,9 @@ async function main() {
     const response = await client.sendUserOperation(accountBuilder)
     console.log(`Add email guardian to account ${account} ophash: ${response.userOpHash}`)
     const userOperationEvent = await response.wait()
-    console.log(`Add email guardian to account ${account} txhash: ${userOperationEvent?.transactionHash}`)
+    console.log(
+        `Add email guardian to account ${account} txhash: ${userOperationEvent?.transactionHash}`
+    )
 }
 
 main()
