@@ -173,7 +173,10 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         bytes calldata signature,
         bytes calldata pubkey
     ) external {
-        require(_guardian.verify(server, data, signature, pubkey), "guardian verify failure");
+        require(
+            _guardian.verify(server, address(this), data, signature, pubkey),
+            "guardian verify failure"
+        );
 
         publicKey = pubkey;
         emit AccountRecovered(publicKey);

@@ -45,6 +45,7 @@ contract EmailGuardian is Ownable {
 
     function verify(
         bytes32 server,
+        address account,
         bytes calldata data,
         bytes calldata signature,
         bytes calldata pubkey
@@ -56,7 +57,7 @@ contract EmailGuardian is Ownable {
         require(_dkimVerifier.verify(server, data, signature), "error dkim signature");
         bytes memory subject = _dkimVerifier.subject(data);
         require(
-            keccak256(subject) == keccak256(subjectHex("01", pubkey)),
+            keccak256(subject) == keccak256(subjectHex("01", account, pubkey)),
             "error email type or pubkey"
         );
         nullifierHashes[hash] = true;
@@ -70,7 +71,11 @@ contract EmailGuardian is Ownable {
     }
 
     // format: type + chainid + account_address + pubkey
-    function subjectHex(string memory typ, bytes memory pubkey) public view returns (bytes memory) {
+    function subjectHex(
+        string memory typ,
+        address account,
+        bytes memory pubkey
+    ) public view returns (bytes memory) {
         bytes memory converted = new bytes(pubkey.length * 2);
         bytes memory _base = "0123456789abcdef";
 
@@ -83,7 +88,7 @@ contract EmailGuardian is Ownable {
             abi.encodePacked(
                 typ,
                 Strings.toString(block.chainid),
-                Strings.toHexString(address(this)),
+                Strings.toHexString(account),
                 converted
             );
     }
