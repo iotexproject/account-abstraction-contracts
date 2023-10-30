@@ -20,8 +20,14 @@ import "../guardian/EmailGuardian.sol";
 contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Initializable {
     uint256[50] private __gap;
 
+    struct RecoveryData {
+        uint256 timestamp;
+        bytes publicKey;
+    }
+
     using ECDSA for bytes32;
 
+    RecoveryData public pendingPublicKey;
     bytes public publicKey;
 
     function entryPoint() public view virtual override returns (IEntryPoint) {
@@ -40,6 +46,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     );
     event EmailGuardianAdded(bytes32 email);
     event EmailGuardianRemoved();
+    event AccountPendingRecovey(uint256 timestamp, bytes publicKey);
     event AccountRecovered(bytes publicKey);
     event AccountResetted(bytes publicKey);
 
@@ -170,12 +177,12 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
 
     function resetPublicKey(bytes calldata pubkey) external {
         require(address(this) == msg.sender, "only owner");
-        
+
         publicKey = pubkey;
         emit AccountResetted(publicKey);
     }
 
-    function recovery(
+    function pendingRecovery(
         bytes32 server,
         bytes calldata data,
         bytes calldata signature,
@@ -186,7 +193,18 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
             "guardian verify failure"
         );
 
-        publicKey = pubkey;
+        pendingPublicKey = RecoveryData({timestamp: block.timestamp, publicKey: pubkey});
+        emit AccountPendingRecovey(block.timestamp, publicKey);
+    }
+
+    function recovery() external {
+        require(
+            pendingPublicKey.timestamp > 0 && pendingPublicKey.timestamp + 86400 < block.timestamp,
+            "invalid recovery time"
+        );
+        publicKey = pendingPublicKey.publicKey;
+        pendingPublicKey.timestamp = 0;
+
         emit AccountRecovered(publicKey);
     }
 
