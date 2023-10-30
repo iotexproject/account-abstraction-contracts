@@ -41,6 +41,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     event EmailGuardianAdded(bytes32 email);
     event EmailGuardianRemoved();
     event AccountRecovered(bytes publicKey);
+    event AccountResetted(bytes publicKey);
 
     // solhint-disable-next-line no-empty-blocks
     receive() external payable {}
@@ -165,6 +166,13 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
         require(address(this) == msg.sender, "only owner");
         _guardian.unbind();
         emit EmailGuardianRemoved();
+    }
+
+    function resetPublicKey(bytes calldata pubkey) external {
+        require(address(this) == msg.sender, "only owner");
+        
+        publicKey = pubkey;
+        emit AccountResetted(publicKey);
     }
 
     function recovery(
