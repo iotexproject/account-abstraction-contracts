@@ -48,6 +48,7 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
     event EmailGuardianRemoved();
     event AccountPendingRecovey(uint256 timestamp, bytes publicKey);
     event AccountRecovered(bytes publicKey);
+    event AccountRecoveryStopped();
     event AccountResetted(bytes publicKey);
 
     // solhint-disable-next-line no-empty-blocks
@@ -195,6 +196,14 @@ contract P256Account is BaseAccount, TokenCallbackHandler, UUPSUpgradeable, Init
 
         pendingPublicKey = RecoveryData({timestamp: block.timestamp, publicKey: pubkey});
         emit AccountPendingRecovey(block.timestamp, publicKey);
+    }
+
+    function stopRecovery() external {
+        require(address(this) == msg.sender, "only owner");
+        require(pendingPublicKey.timestamp > 0, "no recovery");
+
+        pendingPublicKey.timestamp = 0;
+        emit AccountRecoveryStopped();
     }
 
     function recovery() external {
