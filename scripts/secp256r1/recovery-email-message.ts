@@ -26,7 +26,9 @@ async function main() {
     const account = accountBuilder.getSender()
 
     const { chainId } = await ethers.provider.getNetwork()
-    const message = `Send an email with below text as subject to iopay-recover@iotex.me\n01${chainId}${account.toLowerCase()}${signer.publicKey()}`
+    const message = `Send an email with below text as subject to iopay-recover@iotex.me\n01${chainId}${account.toLowerCase()}${signer
+        .publicKey()
+        .substring(2)}`
 
     console.log(message)
 }
