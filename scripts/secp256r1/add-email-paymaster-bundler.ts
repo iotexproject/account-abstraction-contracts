@@ -29,7 +29,7 @@ async function main() {
         overrideBundlerRpc: bundlerRpc,
         factory: accountFactory.address,
         entryPoint: entryPoint.address,
-        salt: 1,
+        salt: 0,
     })
     const account = accountBuilder.getSender()
 
@@ -40,7 +40,7 @@ async function main() {
             // email
             "0x37c46ee7d1e7eadf71a0aa183942a62007c6b96d9300b177e3b4f721c9989f2c",
             // signature
-            "0x7d76948c532ad201ade9eab9551759ff3264d6d1db7f76385b756cd92ee4b749379c3069cb4ce88f4ea1710fc8a1b4c98825115f2d616ab2032e77324906b2901c",
+            "0xb321f5fba8d1c799dfb9b551d26b7944c6787598d405a7625fac40754d91fc0c61b8e46920849e7d5c13c34cbd7e9cdd1680613e641183a8ac7c6437fe13b0571b",
         ]),
     ])
     accountBuilder.setCallData(callData)

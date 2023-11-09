@@ -34,7 +34,7 @@ async function main() {
         overrideBundlerRpc: bundlerRpc,
         factory: accountFactory.address,
         entryPoint: entryPoint.address,
-        salt: 2,
+        salt: 0,
         paymasterMiddleware: Presets.Middleware.verifyingPaymaster(
             // paymaster rpc
             `https://paymaster.testnet.w3bstream.com/rpc/${process.env.API_KEY}`,
